@@ -1,11 +1,14 @@
 """
 FastAPI application for STIBAP Course Recommendation System
 """
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from datetime import datetime
 import logging
+import tempfile
+from pathlib import Path
+from typing import Optional
 
 from config import settings
 from database import db
@@ -88,6 +91,29 @@ async def get_categories():
         return {"success": True, "data": categories}
     except Exception as e:
         logger.error(f"Error fetching categories: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/admin/courses")
+async def admin_list_courses(request: Request):
+    """List all courses for admin panel"""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+
+        logger.info("Admin course list request received")
+
+        result = await db.get_all_courses()
+        if not isinstance(result, list):
+            logger.error(f"Unexpected courses response: {result}")
+            raise HTTPException(status_code=500, detail="Invalid response from database")
+
+        return {"success": True, "courses": result}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error listing courses: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -417,14 +443,216 @@ async def get_user_recommendations(user_id: str, top_k: int = 10):
 
 
 # ============================================
+# Auth & Profile Endpoints
+# ============================================
+
+def get_session_token(request):
+    """Extract session token from cookie or header"""
+    # Try cookie first
+    token = request.cookies.get('session_token')
+    if token:
+        return token
+    
+    # Try Authorization header
+    auth_header = request.headers.get('Authorization')
+    if auth_header and auth_header.startswith('Bearer '):
+        return auth_header.replace('Bearer ', '')
+    
+    # Try custom header
+    token = request.headers.get('X-Session-Token')
+    if token:
+        return token
+    
+    return None
+
+@app.put("/api/auth/update-profile")
+async def update_profile(request: Request, data: dict):
+    """Update user profile"""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        result = await db.update_user_profile(
+            session_token=session_token,
+            full_name=data.get('full_name'),
+            bio=data.get('bio'),
+            avatar_url=data.get('avatar_url')
+        )
+        
+        logger.info(f"Profile update result: {result}")
+        
+        # Ensure we return proper response
+        if not isinstance(result, dict):
+            logger.error(f"Invalid result type: {type(result)}")
+            return {"success": False, "error": "Invalid response from database"}
+        
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Exception in update_profile: {type(e).__name__}: {e}")
+        return {"success": False, "error": "Failed to update profile"}
+
+@app.post("/api/auth/change-password")
+async def change_password(request: Request, data: dict):
+    """Change user password"""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        result = await db.change_user_password(
+            session_token=session_token,
+            old_password=data.get('old_password'),
+            new_password=data.get('new_password')
+        )
+        
+        logger.info(f"Password change result: {result}")
+        
+        # Ensure we return proper response
+        if not isinstance(result, dict):
+            logger.error(f"Invalid result type: {type(result)}")
+            return {"success": False, "error": "Invalid response from database"}
+        
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Exception in change_password: {type(e).__name__}: {e}")
+        return {"success": False, "error": "Failed to change password"}
+
+@app.get("/api/auth/me")
+async def get_current_user(request: Request):
+    """Get current user info"""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        user = await db.get_user_by_session(session_token)
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid session")
+        
+        return {"success": True, "user": user}
+    except Exception as e:
+        logger.error(f"Error getting user: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================
 # Admin Endpoints
 # ============================================
+
+@app.get("/api/admin/users")
+async def get_all_users(request: Request):
+    """Get all users (admin only)"""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            logger.error("No session token found")
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        logger.info(f"Admin request with token: {session_token[:20]}...")
+        result = await db.admin_get_all_users(session_token)
+        
+        if not result.get('success'):
+            logger.error(f"Admin check failed: {result.get('error')}")
+            raise HTTPException(status_code=403, detail=result.get('error', 'Unauthorized'))
+        
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting users: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/api/admin/users/{user_id}")
+async def update_user(request: Request, user_id: str, data: dict):
+    """Update user (admin only)"""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        logger.info(f"Updating user {user_id} with data: {data}")
+        
+        result = await db.admin_update_user(
+            session_token=session_token,
+            target_user_id=user_id,
+            full_name=data.get('full_name'),
+            email=data.get('email'),
+            role=data.get('role'),
+            is_active=data.get('is_active')
+        )
+        
+        logger.info(f"Update result from DB: {result}")
+        logger.info(f"Result type: {type(result)}, success value: {result.get('success')}")
+        
+        if not result.get('success'):
+            logger.error(f"Update failed with result: {result}")
+            raise HTTPException(status_code=403, detail=result.get('error', 'Unauthorized'))
+        
+        logger.info(f"Returning successful result: {result}")
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Exception in update_user endpoint: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/admin/courses/import")
+async def import_course(
+    request: Request,
+    file: UploadFile = File(...),
+    course_id: Optional[str] = Query(default=None)
+):
+    """Import or update a course via structured archive upload (admin only)."""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+
+        if file.content_type not in {"application/zip", "application/x-zip-compressed", "application/octet-stream"}:
+            logger.warning(f"Invalid content type for course import: {file.content_type}")
+            raise HTTPException(status_code=400, detail="Upload must be a ZIP archive")
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_file:
+            tmp_path = Path(tmp_file.name)
+            tmp_file.write(await file.read())
+
+        try:
+            result = await db.import_course_package(
+                session_token=session_token,
+                archive_path=tmp_path,
+                course_id=course_id
+            )
+        finally:
+            try:
+                tmp_path.unlink()
+            except FileNotFoundError:
+                pass
+
+        if not isinstance(result, dict):
+            logger.error(f"Course import returned invalid response: {result}")
+            raise HTTPException(status_code=500, detail="Invalid response from database")
+
+        if not result.get('success'):
+            logger.error(f"Course import failed: {result}")
+            raise HTTPException(status_code=400, detail=result.get('error', 'Failed to import course'))
+
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Exception during course import: {e}")
+        raise HTTPException(status_code=500, detail="Course import failed")
 
 @app.post("/api/admin/reload-courses")
 async def reload_courses():
     """Reload courses and regenerate embeddings (admin only)"""
     try:
-        courses = await db.get_all_courses()
         ai_engine.preprocess_course_data(courses)
         return {
             "success": True,

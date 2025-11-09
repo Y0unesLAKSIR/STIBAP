@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS public.difficulty_levels (
 -- 3. Create courses/lessons table
 CREATE TABLE IF NOT EXISTS public.courses (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    slug TEXT UNIQUE,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     category_id UUID REFERENCES public.categories(id) ON DELETE CASCADE NOT NULL,
@@ -36,9 +37,52 @@ CREATE TABLE IF NOT EXISTS public.courses (
     learning_outcomes TEXT[],
     content_url TEXT,
     thumbnail_url TEXT,
+    source_file_url TEXT,
+    has_structure BOOLEAN DEFAULT false,
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 3a. Course module hierarchy
+CREATE TABLE IF NOT EXISTS public.course_modules (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    course_id UUID REFERENCES public.courses(id) ON DELETE CASCADE NOT NULL,
+    slug TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    order_index INTEGER NOT NULL,
+    estimated_minutes INTEGER,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(course_id, slug),
+    UNIQUE(course_id, order_index)
+);
+
+CREATE TABLE IF NOT EXISTS public.course_units (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    module_id UUID REFERENCES public.course_modules(id) ON DELETE CASCADE NOT NULL,
+    slug TEXT NOT NULL,
+    title TEXT NOT NULL,
+    unit_type TEXT CHECK (unit_type IN ('chapter', 'exercise', 'quiz', 'project')) DEFAULT 'chapter',
+    content JSONB,
+    order_index INTEGER NOT NULL,
+    estimated_minutes INTEGER,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(module_id, slug),
+    UNIQUE(module_id, order_index)
+);
+
+CREATE TABLE IF NOT EXISTS public.course_unit_assets (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    unit_id UUID REFERENCES public.course_units(id) ON DELETE CASCADE NOT NULL,
+    file_name TEXT NOT NULL,
+    storage_path TEXT NOT NULL,
+    file_type TEXT,
+    file_size_bytes BIGINT,
+    metadata JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- 4. Create user preferences table (stores onboarding data)
@@ -83,6 +127,11 @@ CREATE TABLE IF NOT EXISTS public.ai_recommendations (
 CREATE INDEX idx_courses_category ON public.courses(category_id);
 CREATE INDEX idx_courses_difficulty ON public.courses(difficulty_id);
 CREATE INDEX idx_courses_keywords ON public.courses USING GIN(keywords);
+CREATE INDEX idx_course_modules_course ON public.course_modules(course_id);
+CREATE INDEX idx_course_modules_slug ON public.course_modules(slug);
+CREATE INDEX idx_course_units_module ON public.course_units(module_id);
+CREATE INDEX idx_course_units_type ON public.course_units(unit_type);
+CREATE INDEX idx_course_unit_assets_unit ON public.course_unit_assets(unit_id);
 CREATE INDEX idx_user_preferences_user ON public.user_preferences(user_id);
 CREATE INDEX idx_user_progress_user ON public.user_course_progress(user_id);
 CREATE INDEX idx_user_progress_course ON public.user_course_progress(course_id);
@@ -93,6 +142,9 @@ CREATE INDEX idx_categories_parent ON public.categories(parent_id);
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.difficulty_levels ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.course_modules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.course_units ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.course_unit_assets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_preferences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_course_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ai_recommendations ENABLE ROW LEVEL SECURITY;
@@ -110,6 +162,18 @@ CREATE POLICY "Anyone can view difficulty levels"
 CREATE POLICY "Anyone can view active courses"
     ON public.courses FOR SELECT
     USING (is_active = true);
+
+CREATE POLICY "Anyone can view course modules"
+    ON public.course_modules FOR SELECT
+    USING (true);
+
+CREATE POLICY "Anyone can view course units"
+    ON public.course_units FOR SELECT
+    USING (true);
+
+CREATE POLICY "Anyone can view course unit assets"
+    ON public.course_unit_assets FOR SELECT
+    USING (true);
 
 -- 11. RLS Policies - User Preferences (User-specific)
 CREATE POLICY "Users can view own preferences"

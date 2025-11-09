@@ -47,12 +47,21 @@ const Home = () => {
       <nav className="navbar">
         <div className="nav-content">
           <h2 className="nav-brand">STIBAP</h2>
-          <button onClick={handleSignOut} className="logout-button">
-            Sign Out
-          </button>
+          <div className="nav-actions">
+            <button onClick={() => navigate('/settings')} className="nav-button">
+              ⚙️ Settings
+            </button>
+            {(user?.role === 'admin' || user?.role === 'superadmin') && (
+              <button onClick={() => navigate('/admin')} className="nav-button admin-button">
+                🛡️ Admin
+              </button>
+            )}
+            <button onClick={handleSignOut} className="logout-button">
+              Sign Out
+            </button>
+          </div>
         </div>
       </nav>
-
       <div className="home-content">
         <div className="welcome-card">
           <h1 className="welcome-title">

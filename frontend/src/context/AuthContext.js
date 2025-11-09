@@ -94,12 +94,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = async () => {
+    // Refresh user data from server
+    await checkSession();
+  };
+
   const value = {
     user,
     signUp,
     signIn,
     signOut,
     updatePassword,
+    updateUser,
     loading,
     refreshSession: checkSession,
   };
