@@ -123,6 +123,18 @@ CREATE TABLE IF NOT EXISTS public.ai_recommendations (
     expires_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '7 days')
 );
 
+-- 6a. Per-unit progress tracking
+CREATE TABLE IF NOT EXISTS public.user_unit_progress (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    course_id UUID REFERENCES public.courses(id) ON DELETE CASCADE NOT NULL,
+    module_id UUID REFERENCES public.course_modules(id) ON DELETE CASCADE NOT NULL,
+    unit_id UUID REFERENCES public.course_units(id) ON DELETE CASCADE NOT NULL,
+    completed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(user_id, unit_id)
+);
+
 -- 7. Create indexes for better performance
 CREATE INDEX idx_courses_category ON public.courses(category_id);
 CREATE INDEX idx_courses_difficulty ON public.courses(difficulty_id);
@@ -137,6 +149,9 @@ CREATE INDEX idx_user_progress_user ON public.user_course_progress(user_id);
 CREATE INDEX idx_user_progress_course ON public.user_course_progress(course_id);
 CREATE INDEX idx_ai_recommendations_user ON public.ai_recommendations(user_id);
 CREATE INDEX idx_categories_parent ON public.categories(parent_id);
+-- New indexes for per-unit progress
+CREATE INDEX idx_user_unit_progress_user_course ON public.user_unit_progress(user_id, course_id);
+CREATE INDEX idx_user_unit_progress_course_unit ON public.user_unit_progress(course_id, unit_id);
 
 -- 8. Enable Row Level Security
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
@@ -148,6 +163,7 @@ ALTER TABLE public.course_unit_assets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_preferences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_course_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ai_recommendations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_unit_progress ENABLE ROW LEVEL SECURITY;
 
 -- 9. RLS Policies - Categories and Difficulty (Public Read)
 CREATE POLICY "Anyone can view categories"
@@ -199,6 +215,19 @@ CREATE POLICY "Users can insert own progress"
 
 CREATE POLICY "Users can update own progress"
     ON public.user_course_progress FOR UPDATE
+    USING (user_id = current_setting('app.current_user_id', true)::uuid);
+
+-- 12a. RLS Policies - User Unit Progress
+CREATE POLICY "Users can view own unit progress"
+    ON public.user_unit_progress FOR SELECT
+    USING (user_id = current_setting('app.current_user_id', true)::uuid);
+
+CREATE POLICY "Users can insert own unit progress"
+    ON public.user_unit_progress FOR INSERT
+    WITH CHECK (user_id = current_setting('app.current_user_id', true)::uuid);
+
+CREATE POLICY "Users can update own unit progress"
+    ON public.user_unit_progress FOR UPDATE
     USING (user_id = current_setting('app.current_user_id', true)::uuid);
 
 -- 13. RLS Policies - AI Recommendations

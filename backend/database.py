@@ -13,6 +13,7 @@ import zipfile
 import time
 import re
 from pathlib import Path
+from datetime import datetime
 from postgrest import APIError
 
 logger = logging.getLogger(__name__)
@@ -64,6 +65,21 @@ class Database:
             supabase_key
         )
     
+    # Session/User helpers
+    def get_user_by_session(self, session_token: str) -> Optional[Dict[str, Any]]:
+        """Resolve current user from a session token via Supabase RPC."""
+        try:
+            response = self.client.rpc('verify_session', {
+                'p_session_token': session_token
+            }).execute()
+            result = _normalize_supabase_result(response.data)
+            if not result or not result.get('success'):
+                return None
+            return result.get('user')
+        except Exception as e:
+            logger.error(f"get_user_by_session failed: {e}")
+            return None
+
     # Categories
     async def get_all_categories(self) -> List[Dict]:
         """Get all categories with hierarchy"""
@@ -199,6 +215,130 @@ class Database:
                 .execute()
 
         return response.data[0]
+
+    # Course consumption: outline & per-unit progress
+    async def get_course_outline(self, course_id: str) -> Dict[str, Any]:
+        """Return course info with modules and units (including full unit content)."""
+        # Course
+        course_resp = self.client.table('courses').select('*').eq('id', course_id).single().execute()
+        course = course_resp.data if course_resp and course_resp.data else None
+        if not course:
+            return {}
+        # Modules
+        modules_resp = self.client.table('course_modules')\
+            .select('*')\
+            .eq('course_id', course_id)\
+            .order('order_index', desc=False)\
+            .execute()
+        modules = modules_resp.data or []
+        module_ids = [m['id'] for m in modules]
+        units_by_module: Dict[str, List[Dict[str, Any]]] = {m['id']: [] for m in modules}
+        if module_ids:
+            units_resp = self.client.table('course_units')\
+                .select('*')\
+                .in_('module_id', module_ids)\
+                .order('order_index', desc=False)\
+                .execute()
+            for u in (units_resp.data or []):
+                units_by_module.setdefault(u['module_id'], []).append(u)
+        # Attach units to modules
+        outline_modules = []
+        for m in modules:
+            outline_modules.append({
+                **m,
+                'units': units_by_module.get(m['id'], [])
+            })
+        return {
+            'course': course,
+            'modules': outline_modules
+        }
+
+    async def get_user_course_progress(self, user_id: str, course_id: str) -> Dict[str, Any]:
+        """Compute totals, completed units and roll-up status for a course."""
+        # Modules for course
+        modules_resp = self.client.table('course_modules')\
+            .select('id')\
+            .eq('course_id', course_id)\
+            .execute()
+        module_ids = [m['id'] for m in (modules_resp.data or [])]
+        total_units = 0
+        unit_ids: List[str] = []
+        if module_ids:
+            units_resp = self.client.table('course_units')\
+                .select('id')\
+                .in_('module_id', module_ids)\
+                .order('order_index', desc=False)\
+                .execute()
+            unit_ids = [u['id'] for u in (units_resp.data or [])]
+            total_units = len(unit_ids)
+        # Completed units
+        completed_resp = self.client.table('user_unit_progress')\
+            .select('unit_id')\
+            .eq('user_id', user_id)\
+            .eq('course_id', course_id)\
+            .execute()
+        completed_ids = [row['unit_id'] for row in (completed_resp.data or [])]
+        # Roll-up row
+        rollup_resp = self.client.table('user_course_progress')\
+            .select('*')\
+            .eq('user_id', user_id)\
+            .eq('course_id', course_id)\
+            .execute()
+        rollup = rollup_resp.data[0] if rollup_resp.data else None
+        percentage = int((len(completed_ids) / total_units) * 100) if total_units > 0 else 0
+        status = rollup['status'] if rollup else ('not_started' if percentage == 0 else ('completed' if percentage == 100 else 'in_progress'))
+        return {
+            'total_units': total_units,
+            'completed_unit_ids': completed_ids,
+            'percentage': percentage,
+            'status': status,
+            'rollup': rollup
+        }
+
+    async def complete_unit(self, user_id: str, course_id: str, unit_id: str) -> Dict[str, Any]:
+        """Mark a unit as completed for the user and update course progress."""
+        # Validate unit and module
+        unit_resp = self.client.table('course_units').select('id,module_id').eq('id', unit_id).single().execute()
+        unit = unit_resp.data if unit_resp and unit_resp.data else None
+        if not unit:
+            return {'success': False, 'error': 'Unit not found'}
+        module_resp = self.client.table('course_modules').select('id,course_id').eq('id', unit['module_id']).single().execute()
+        module = module_resp.data if module_resp and module_resp.data else None
+        if not module or module['course_id'] != course_id:
+            return {'success': False, 'error': 'Unit does not belong to course'}
+        # Upsert user_unit_progress (idempotent)
+        existing = self.client.table('user_unit_progress')\
+            .select('id')\
+            .eq('user_id', user_id)\
+            .eq('unit_id', unit_id)\
+            .execute()
+        if existing.data:
+            self.client.table('user_unit_progress')\
+                .update({'completed_at': 'now()'})\
+                .eq('id', existing.data[0]['id'])\
+                .execute()
+        else:
+            self.client.table('user_unit_progress')\
+                .insert({
+                    'user_id': user_id,
+                    'course_id': course_id,
+                    'module_id': module['id'],
+                    'unit_id': unit_id
+                })\
+                .execute()
+        # Recompute progress and update roll-up
+        summary = await self.get_user_course_progress(user_id, course_id)
+        status = 'completed' if summary['percentage'] == 100 else 'in_progress'
+        update = {
+            'status': status,
+            'progress_percentage': summary['percentage']
+        }
+        if status == 'in_progress':
+            update['started_at'] = datetime.utcnow().isoformat()
+        if status == 'completed':
+            update['completed_at'] = datetime.utcnow().isoformat()
+        rollup = await self.update_course_progress(user_id, course_id, update)
+        return {'success': True, 'progress': summary, 'rollup': rollup}
     # Course import helpers
     def _prepare_modules(
         self,
@@ -230,6 +370,11 @@ class Database:
                 try:
                     with open(module_manifest_path, 'r', encoding='utf-8') as module_file:
                         module_manifest = json.load(module_file)
+                    # Respect module.json structure: prefer explicit module_slug/slug from manifest
+                    manifest_slug = module_manifest.get('module_slug') or module_manifest.get('slug')
+                    if manifest_slug:
+                        module_copy['slug'] = manifest_slug
+                        module_dir = modules_root / module_copy['slug']  # update dir to reflect slug from manifest
                     module_copy.setdefault('title', module_manifest.get('title'))
                     module_copy.setdefault('description', module_manifest.get('description'))
                     module_copy['order_index'] = module_copy.get('order_index') or module_manifest.get('order_index', index)
@@ -249,9 +394,11 @@ class Database:
                     f'unit-{unit_index}'
                 )
 
-                # Load unit content from external file if referenced
+                # Load unit content with preference: explicit file > default markdown file > inline body
                 unit_content = unit_copy.get('content') or {}
                 content_file_ref = unit_content.get('file')
+                default_md = module_dir / 'units' / f"{unit_copy['slug']}.md"
+
                 if content_file_ref:
                     content_path = module_dir / content_file_ref
                     if content_path.exists():
@@ -264,19 +411,22 @@ class Database:
                             logger.error(f"Failed to read unit content file {content_path}: {content_error}")
                     else:
                         logger.error(f"Unit content file missing: {content_path}")
+                elif default_md.exists():
+                    try:
+                        unit_copy['content'] = {
+                            'format': 'markdown',
+                            'body': default_md.read_text(encoding='utf-8')
+                        }
+                    except Exception as default_content_error:
+                        logger.error(f"Failed to read default unit markdown {default_md}: {default_content_error}")
                 else:
-                    # Fallback: attempt to load markdown by slug if no body provided
+                    # Fallback to inline body if provided
                     body = unit_content.get('body') if unit_content else None
-                    if not body:
-                        default_md = module_dir / 'units' / f"{unit_copy['slug']}.md"
-                        if default_md.exists():
-                            try:
-                                unit_copy['content'] = {
-                                    'format': 'markdown',
-                                    'body': default_md.read_text(encoding='utf-8')
-                                }
-                            except Exception as default_content_error:
-                                logger.error(f"Failed to read default unit markdown {default_md}: {default_content_error}")
+                    if body is not None:
+                        unit_copy['content'] = {
+                            'format': unit_content.get('format', 'markdown'),
+                            'body': body
+                        }
 
                 unit_assets: List[Dict[str, Any]] = []
                 for asset in unit_copy.get('assets') or []:
@@ -369,6 +519,27 @@ class Database:
         except Exception as storage_error:
             logger.error(f"Storage upload failed for {local_path}: {storage_error}")
             return None
+
+    def _upload_directory_to_storage(self, root_path: Path, base_prefix: str) -> None:
+        """Recursively upload an entire directory to storage preserving structure.
+        Skips the archive's manifest file name 'course.json' at root (it is metadata),
+        otherwise uploads all files including markdown, images, etc.
+        """
+        if not root_path.exists() or not root_path.is_dir():
+            return
+
+        for p in root_path.rglob('*'):
+            if p.is_file():
+                try:
+                    rel = p.relative_to(root_path)
+                    # Skip root-level course.json manifest; all other files are uploaded
+                    if str(rel).replace('\\', '/') == 'course.json':
+                        continue
+                    rel_str = str(rel).replace('\\', '/')
+                    dest = f"{base_prefix}/{rel_str}"
+                    self._upload_file_to_storage(p, dest)
+                except Exception as e:
+                    logger.error(f"Failed to upload file {p} from directory sync: {e}")
 
     def _verify_admin_session(self, session_token: str) -> Dict[str, Any]:
         """Ensure the session token belongs to an admin user."""
@@ -575,9 +746,18 @@ class Database:
             course_slug = _slugify_value(manifest.get('slug') or manifest.get('title'))
             manifest['slug'] = course_slug
 
+            # Prepare and upload all content referenced by manifest (modules, unit assets, extra assets)
             prepared_modules = self._prepare_modules(modules_raw, tmp_root, course_slug)
             prepared_assets = self._prepare_additional_assets(additional_assets, tmp_root, course_slug)
 
+            # NEW: Upload the entire extracted archive directory so that ALL files are available in storage
+            # This ensures not only assets folder but every file (markdown, JSON, images, etc.) is uploaded
+            try:
+                self._upload_directory_to_storage(tmp_root, f"courses/{course_slug}")
+            except Exception as e:
+                logger.error(f"Failed to upload full course directory to storage: {e}")
+
+            # Always upload the original ZIP to archives for reference
             timestamp = int(time.time())
             storage_key = f"archives/{course_slug}-{timestamp}.zip"
             storage_path = self._upload_file_to_storage(archive_path, storage_key)
@@ -724,6 +904,38 @@ class Database:
             if error_payload and error_payload.get('error'):
                 return {'success': False, 'error': error_payload.get('error')}
             return {'success': False, 'error': 'Failed to update user'}
+
+    async def admin_update_course_category(
+        self,
+        session_token: str,
+        course_id: str,
+        category_id: str
+    ) -> Dict:
+        """Update a course's category (admin only)."""
+        try:
+            # Verify admin session
+            check = self._verify_admin_session(session_token)
+            if not check.get('success'):
+                return check
+
+            # Ensure category exists
+            cat = self.client.table('categories').select('id').eq('id', category_id).limit(1).execute()
+            if not cat.data:
+                return {'success': False, 'error': 'Category not found'}
+
+            # Update the course
+            resp = self.client.table('courses')\
+                .update({'category_id': category_id})\
+                .eq('id', course_id)\
+                .execute()
+
+            if resp.data is None:
+                return {'success': False, 'error': 'Failed to update course category'}
+
+            return {'success': True, 'course_id': course_id, 'category_id': category_id}
+        except Exception as e:
+            logger.error(f"Failed to update course category: {e}")
+            return {'success': False, 'error': 'Failed to update course category'}
 
 
 # Global database instance

@@ -15,6 +15,9 @@ const Admin = () => {
   const [error, setError] = useState('');
   const [courses, setCourses] = useState([]);
   const [coursesLoading, setCoursesLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [categoryEdits, setCategoryEdits] = useState({});
 
   // Users data
   const [users, setUsers] = useState([]);
@@ -33,6 +36,10 @@ const Admin = () => {
     }
     if (activeTab === 'courses') {
       fetchCourses();
+    }
+    if (activeTab === 'categories') {
+      fetchCategories();
+      fetchAdminCourses();
     }
   }, [activeTab]);
 
@@ -85,6 +92,93 @@ const Admin = () => {
       setCoursesLoading(false);
     }
   }, []);
+
+  const fetchAdminCourses = useCallback(async () => {
+    setCoursesLoading(true);
+    try {
+      const sessionToken = getSessionToken();
+      if (!sessionToken) {
+        setError('Not authenticated');
+        setCoursesLoading(false);
+        return;
+      }
+      const response = await fetch('http://localhost:8000/api/admin/courses', {
+        headers: {
+          'Authorization': `Bearer ${sessionToken}`
+        },
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCourses(data.courses || []);
+      } else {
+        setError(data.error || 'Failed to fetch courses');
+      }
+    } catch (err) {
+      setError('Failed to fetch courses');
+    } finally {
+      setCoursesLoading(false);
+    }
+  }, []);
+
+  const fetchCategories = useCallback(async () => {
+    setCategoriesLoading(true);
+    try {
+      const response = await fetch('http://localhost:8000/api/categories', {
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCategories(data.data || []);
+      } else {
+        setError(data.error || 'Failed to fetch categories');
+      }
+    } catch (err) {
+      setError('Failed to fetch categories');
+    } finally {
+      setCategoriesLoading(false);
+    }
+  }, []);
+
+  const handleAssignCategory = async (courseId) => {
+    setLoading(true);
+    setMessage('');
+    setError('');
+    try {
+      const sessionToken = getSessionToken();
+      if (!sessionToken) {
+        setError('Not authenticated');
+        setLoading(false);
+        return;
+      }
+      const category_id = categoryEdits[courseId];
+      if (!category_id) {
+        setError('Please select a category');
+        setLoading(false);
+        return;
+      }
+      const response = await fetch(`http://localhost:8000/api/admin/courses/${courseId}/category`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${sessionToken}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ category_id })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setMessage('Category updated successfully');
+        await fetchAdminCourses();
+      } else {
+        setError(data.error || 'Failed to update category');
+      }
+    } catch (err) {
+      setError('Failed to update category');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleUpdateUser = async (userId, updates) => {
     setLoading(true);
@@ -338,20 +432,64 @@ const Admin = () => {
             <div className="admin-section">
               <div className="section-header">
                 <h2>Category Management</h2>
-                <button className="btn-primary" disabled>
-                  + Add Category (Coming Soon)
-                </button>
+                <div className="actions">
+                  <button type="button" className="btn-secondary" onClick={() => { fetchCategories(); fetchAdminCourses(); }} disabled={categoriesLoading || coursesLoading}>
+                    {categoriesLoading || coursesLoading ? 'Refreshing…' : 'Refresh'}
+                  </button>
+                </div>
               </div>
-              <div className="coming-soon">
-                <h3>🏷️ Category Management</h3>
-                <p>Coming soon! You'll be able to:</p>
-                <ul>
-                  <li>Create and organize categories</li>
-                  <li>Set up category hierarchies</li>
-                  <li>Manage category icons and descriptions</li>
-                  <li>Assign courses to categories</li>
-                </ul>
-              </div>
+
+              {(categoriesLoading || coursesLoading) && (
+                <div className="loading-spinner">Loading categories and courses…</div>
+              )}
+
+              {!categoriesLoading && !coursesLoading && courses.length === 0 && (
+                <div className="empty-state">
+                  <p>No courses found</p>
+                </div>
+              )}
+
+              {!categoriesLoading && !coursesLoading && courses.length > 0 && (
+                <div className="users-table courses-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Course</th>
+                        <th>Current Category</th>
+                        <th>Change To</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {courses.map((c) => (
+                        <tr key={c.id}>
+                          <td>{c.title}</td>
+                          <td>{c.category?.name || '—'}</td>
+                          <td>
+                            <select
+                              className="edit-select"
+                              value={categoryEdits[c.id] || c.category?.id || ''}
+                              onChange={(e) => setCategoryEdits(prev => ({ ...prev, [c.id]: e.target.value }))}
+                            >
+                              <option value="">Select category…</option>
+                              {categories.map(cat => (
+                                <option key={cat.id} value={cat.id}>
+                                  {cat.name}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                          <td>
+                            <button className="btn-save" onClick={() => handleAssignCategory(c.id)} disabled={loading || !categoryEdits[c.id]}>
+                              Assign
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 

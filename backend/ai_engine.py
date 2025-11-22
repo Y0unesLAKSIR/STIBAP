@@ -3,7 +3,7 @@ AI-powered course recommendation engine using sentence transformers
 """
 import torch
 from sentence_transformers import SentenceTransformer, util
-from typing import List, Dict, Tuple
+from typing import List, Dict, Any, Optional
 import numpy as np
 from config import settings
 import logging
@@ -11,6 +11,7 @@ import os
 import ssl
 import re
 from difflib import SequenceMatcher
+from collections import defaultdict
 
 # Disable SSL verification for HuggingFace downloads
 os.environ['CURL_CA_BUNDLE'] = ''
@@ -112,163 +113,225 @@ class CourseRecommendationEngine:
         
         'frontend': 'frontend development',
         'front-end': 'frontend development',
-        'frontend development': 'frontend development',
         
         'fullstack': 'full stack development',
         'full-stack': 'full stack development',
         'full stack': 'full stack development',
     }
-    
+
+    @staticmethod
+    def _ensure_dict(value: Any) -> Dict[str, Any]:
+        """Return a dictionary or an empty dict if value is falsy/non-dict."""
+        return value if isinstance(value, dict) else {}
+
     def __init__(self):
-        self.model = None
-        self.course_embeddings = {}
-        self.courses_data = []
-        self.category_names = []  # Store actual category names from DB
-        self.load_model()
-    
-    def load_model(self):
-        """Load the sentence transformer model"""
+        self.model: Optional[SentenceTransformer] = None
+        self.course_embeddings: Optional[torch.Tensor] = None
+        self.courses_data: List[Dict[str, Any]] = []
+        self.category_names: List[str] = []  # Store actual category names from DB
+        self.category_embeddings: Dict[str, torch.Tensor] = {}
+        self.difficulty_embeddings: Dict[str, torch.Tensor] = {}
+        self._load_model()
+
+    def _load_model(self) -> None:
+        """Load the sentence transformer model if it is not already available."""
+        if self.model is not None:
+            return
+
         try:
-            logger.info(f"Loading model: {settings.model_name}")
-            logger.info("This may take a few minutes on first run (downloading ~90MB)...")
-            
+            os.makedirs(settings.model_cache_dir, exist_ok=True)
             self.model = SentenceTransformer(
                 settings.model_name,
                 cache_folder=settings.model_cache_dir
             )
-            logger.info("Model loaded successfully")
-        except Exception as e:
-            logger.error(f"Error loading model: {e}")
-            logger.error("\n" + "="*60)
-            logger.error("MODEL DOWNLOAD FAILED!")
-            logger.error("="*60)
-            logger.error("This is likely due to SSL/network issues.")
-            logger.error("\nSOLUTION: Run this command first:")
-            logger.error("    python download_model.py")
-            logger.error("\nThis will download the model with SSL workarounds.")
-            logger.error("Then run 'python main.py' again.")
-            logger.error("="*60 + "\n")
-            raise
-    
-    def normalize_category(self, text: str) -> str:
+            logger.info(
+                "Loaded sentence transformer model '%s' into memory",
+                settings.model_name
+            )
+        except Exception as load_error:
+            logger.error(
+                "Failed to load sentence transformer model '%s': %s",
+                settings.model_name,
+                load_error,
+                exc_info=True
+            )
+            self.model = None
+
+    @staticmethod
+    def _normalize_text(value: str) -> str:
+        """Collapse whitespace and strip surrounding spaces."""
+        if not value:
+            return ""
+        return re.sub(r"\s+", " ", value).strip()
+
+    def _build_course_text(self, course: Dict[str, Any]) -> str:
+        """Compose a single string that represents the course content."""
+        text_parts = [
+            course.get('title', ''),
+            course.get('description', ''),
+            course.get('category', {}).get('name', ''),
+            course.get('difficulty', {}).get('name', ''),
+        ]
+
+        keywords = course.get('keywords') or []
+        if isinstance(keywords, list):
+            text_parts.extend(keywords)
+
+        learning_outcomes = course.get('learning_outcomes') or []
+        if isinstance(learning_outcomes, list):
+            text_parts.extend(learning_outcomes)
+
+        combined = " ".join(filter(None, text_parts))
+        return self._normalize_text(combined)
+
+    def _fuzzy_match_category(self, token: str) -> Optional[str]:
+        """Return the closest category name from the dataset using fuzzy matching."""
+        token = (token or "").strip().lower()
+        if not token or not self.category_names:
+            return None
+
+        best_match: Optional[str] = None
+        best_ratio: float = 0.0
+
+        for candidate in self.category_names:
+            candidate_normalized = (candidate or "").lower()
+            if not candidate_normalized:
+                continue
+
+            ratio = SequenceMatcher(None, token, candidate_normalized).ratio()
+            if ratio > best_ratio:
+                best_ratio = ratio
+                best_match = candidate_normalized
+
+        return best_match if best_ratio >= 0.75 else None
+
+    def normalize_category(self, prompt: str) -> str:
         """
-        Normalize category names by handling abbreviations and spelling mistakes
-        
+        Normalize category terms within the user prompt using alias mapping and fuzzy matching.
+
         Args:
-            text: Input text with potential category names
-            
+            prompt: Raw user prompt text.
+
         Returns:
-            Normalized text with standardized category names
+            Normalized prompt string enriched with canonical category terms.
         """
-        text_lower = text.lower()
-        normalized_text = text
-        
-        # First, try exact mapping from CATEGORY_MAPPINGS
-        words = re.findall(r'\b\w+\b', text_lower)
-        for word in words:
-            if word in self.CATEGORY_MAPPINGS:
-                standard_name = self.CATEGORY_MAPPINGS[word]
-                # Replace in original text (case-insensitive)
-                normalized_text = re.sub(
-                    rf'\b{re.escape(word)}\b',
-                    standard_name,
-                    normalized_text,
-                    flags=re.IGNORECASE
-                )
-                logger.info(f"Mapped '{word}' → '{standard_name}'")
-        
-        # Second, use fuzzy matching for potential spelling mistakes
-        if self.category_names:
-            for word in words:
-                if word not in self.CATEGORY_MAPPINGS and len(word) > 3:
-                    best_match, best_score = self._find_closest_category(word)
-                    # If similarity > 75%, consider it a match
-                    if best_score > 0.75 and best_match:
-                        normalized_text = re.sub(
-                            rf'\b{re.escape(word)}\b',
-                            best_match,
-                            normalized_text,
-                            flags=re.IGNORECASE
-                        )
-                        logger.info(f"Fuzzy matched '{word}' → '{best_match}' (score: {best_score:.2f})")
-        
-        return normalized_text
-    
-    def _find_closest_category(self, word: str) -> Tuple[str, float]:
+        if not prompt:
+            return ""
+
+        original_prompt = self._normalize_text(prompt)
+        normalized_prompt = original_prompt.lower()
+
+        # Apply deterministic alias replacements (e.g., "js" -> "javascript").
+        for alias, canonical in self.CATEGORY_MAPPINGS.items():
+            pattern = rf"(?<!\w){re.escape(alias)}(?!\w)"
+            normalized_prompt = re.sub(pattern, canonical, normalized_prompt)
+
+        # Collect canonical terms to append for better semantic matching.
+        canonical_terms = set()
+        for word in re.findall(r"[a-z0-9+#]+", normalized_prompt):
+            if word in self.CATEGORY_MAPPINGS.values():
+                canonical_terms.add(word)
+            else:
+                fuzzy_match = self._fuzzy_match_category(word)
+                if fuzzy_match:
+                    canonical_terms.add(fuzzy_match)
+
+        canonical_suffix = " ".join(sorted(canonical_terms))
+        if canonical_suffix:
+            enriched = f"{normalized_prompt} {canonical_suffix}"
+        else:
+            enriched = normalized_prompt
+
+        return self._normalize_text(enriched)
+
+    def preprocess_course_data(self, courses: List[Dict[str, Any]]) -> None:
         """
-        Find the closest matching category name using fuzzy matching
-        
-        Args:
-            word: Word to match
-            
-        Returns:
-            Tuple of (best_match, similarity_score)
-        """
-        best_match = None
-        best_score = 0
-        
-        word_lower = word.lower()
-        
-        for category in self.category_names:
-            category_lower = category.lower()
-            # Calculate similarity
-            similarity = SequenceMatcher(None, word_lower, category_lower).ratio()
-            
-            if similarity > best_score:
-                best_score = similarity
-                best_match = category
-        
-        return best_match, best_score
-    
-    def preprocess_course_data(self, courses: List[Dict]):
-        """
-        Preprocess courses and create embeddings
-        
+        Preprocess course data fetched from the database and generate embeddings.
+
         Args:
             courses: List of course dictionaries from database
         """
         logger.info(f"Preprocessing {len(courses)} courses")
-        self.courses_data = courses
-        
-        # Extract unique category names for fuzzy matching
-        self.category_names = list(set(
-            course.get('category', {}).get('name', '')
-            for course in courses
-            if course.get('category', {}).get('name')
-        ))
-        logger.info(f"Loaded {len(self.category_names)} categories for fuzzy matching")
-        
-        # Create rich text representations of courses
-        course_texts = []
+
+        if not isinstance(courses, list):
+            logger.warning("Expected list of courses, received %s", type(courses))
+            courses = []
+
+        self._load_model()
+
+        if self.model is None:
+            logger.error("Sentence transformer model is unavailable; skipping preprocessing")
+            self.course_embeddings = None
+            self.courses_data = []
+            self.category_names = []
+            self.category_embeddings = {}
+            self.difficulty_embeddings = {}
+            return
+
+        sanitized_courses: List[Dict[str, Any]] = []
+        course_texts: List[str] = []
+
         for course in courses:
-            # Combine all relevant text fields
-            text_parts = [
-                course['title'],
-                course['description'],
-                course.get('category', {}).get('name', ''),
-                course.get('difficulty', {}).get('name', ''),
-            ]
-            
-            # Add keywords if available
-            if course.get('keywords'):
-                text_parts.extend(course['keywords'])
-            
-            # Add learning outcomes
-            if course.get('learning_outcomes'):
-                text_parts.extend(course['learning_outcomes'])
-            
-            # Combine all parts
-            course_text = ' '.join(filter(None, text_parts))
+            course_copy: Dict[str, Any] = dict(course)
+
+            category = self._ensure_dict(course_copy.get('category'))
+            difficulty = self._ensure_dict(course_copy.get('difficulty'))
+            course_copy['category'] = category
+            course_copy['difficulty'] = difficulty
+
+            keywords_raw = course_copy.get('keywords') or []
+            if isinstance(keywords_raw, str):
+                keywords = [keywords_raw]
+            elif isinstance(keywords_raw, list):
+                keywords = [k for k in keywords_raw if k]
+            else:
+                keywords = []
+            course_copy['keywords'] = keywords
+
+            learning_outcomes_raw = course_copy.get('learning_outcomes') or []
+            if isinstance(learning_outcomes_raw, str):
+                learning_outcomes = [learning_outcomes_raw]
+            elif isinstance(learning_outcomes_raw, list):
+                learning_outcomes = [lo for lo in learning_outcomes_raw if lo]
+            else:
+                learning_outcomes = []
+            course_copy['learning_outcomes'] = learning_outcomes
+
+            sanitized_courses.append(course_copy)
+
+            course_text = self._build_course_text(course_copy)
             course_texts.append(course_text)
-        
+
+        self.courses_data = sanitized_courses
+
+        # Extract unique category names for fuzzy matching
+        self.category_names = list({
+            course['category'].get('name')
+            for course in sanitized_courses
+            if course['category'].get('name')
+        })
+        logger.info(f"Loaded {len(self.category_names)} categories for fuzzy matching")
+
+        if not course_texts:
+            logger.warning("No course texts available to encode; skipping embeddings generation")
+            self.course_embeddings = None
+            return
+
         # Generate embeddings
-        logger.info("Generating course embeddings...")
-        self.course_embeddings = self.model.encode(
-            course_texts,
-            convert_to_tensor=True,
-            show_progress_bar=True
-        )
-        logger.info("Course embeddings generated successfully")
+        try:
+            logger.info("Generating course embeddings...")
+            self.course_embeddings = self.model.encode(
+                course_texts,
+                convert_to_tensor=True,
+                show_progress_bar=len(course_texts) > 1
+            )
+            logger.info("Course embeddings generated successfully")
+            self._update_aggregate_embeddings()
+        except Exception as encoding_error:
+            logger.error("Failed to generate course embeddings: %s", encoding_error, exc_info=True)
+            self.course_embeddings = None
+            self.category_embeddings = {}
+            self.difficulty_embeddings = {}
     
     def get_recommendations(
         self, 
@@ -293,6 +356,10 @@ class CourseRecommendationEngine:
         """
         if not self.model or len(self.courses_data) == 0:
             logger.warning("Model not loaded or no courses available")
+            return []
+
+        if not isinstance(self.course_embeddings, torch.Tensor) or self.course_embeddings.numel() == 0:
+            logger.warning("Course embeddings are unavailable; cannot generate recommendations")
             return []
         
         top_k = top_k or settings.max_recommendations
@@ -371,6 +438,10 @@ class CourseRecommendationEngine:
         Returns:
             List of similar courses with scores
         """
+        if not isinstance(self.course_embeddings, torch.Tensor) or self.course_embeddings.numel() == 0:
+            logger.warning("Course embeddings are unavailable; cannot compute similar courses")
+            return []
+
         # Find the course index
         course_idx = None
         for idx, course in enumerate(self.courses_data):
@@ -412,47 +483,144 @@ class CourseRecommendationEngine:
         else:
             return "Low Relevance"
     
-    def analyze_prompt(self, prompt: str) -> Dict:
-        """
-        Analyze user prompt to extract learning intents
-        
-        Args:
-            prompt: User's input
-            
-        Returns:
-            Dictionary with analysis results
-        """
-        prompt_lower = prompt.lower()
-        
-        # Keywords for difficulty detection
-        beginner_keywords = ['beginner', 'start', 'basic', 'introduction', 'learn', 'new to']
-        intermediate_keywords = ['intermediate', 'improve', 'advance', 'deeper', 'better']
-        advanced_keywords = ['advanced', 'expert', 'master', 'deep dive', 'complex']
-        
-        # Detect suggested difficulty
-        suggested_difficulty = "Intermediate"  # Default
-        if any(keyword in prompt_lower for keyword in beginner_keywords):
-            suggested_difficulty = "Beginner"
-        elif any(keyword in prompt_lower for keyword in advanced_keywords):
-            suggested_difficulty = "Advanced"
-        
-        # Extract potential topics (simple keyword extraction)
-        topics = []
-        course_keywords = set()
-        for course in self.courses_data:
-            if course.get('keywords'):
-                course_keywords.update([k.lower() for k in course['keywords']])
-        
-        for keyword in course_keywords:
-            if keyword in prompt_lower:
-                topics.append(keyword)
-        
-        return {
-            'suggested_difficulty': suggested_difficulty,
-            'detected_topics': topics[:5],  # Top 5
-            'prompt_length': len(prompt.split()),
-            'is_specific': len(topics) > 2
+    def analyze_prompt(
+        self,
+        prompt: str,
+        prompt_context: Optional[Dict[str, Any]] = None,
+        max_categories: int = 3,
+        max_topics: int = 5
+    ) -> Dict:
+        """Infer user learning intent using transformer embeddings."""
+        if not prompt:
+            return {
+                'normalized_prompt': '',
+                'prompt_length': 0,
+                'top_categories': [],
+                'top_difficulties': [],
+                'detected_topics': [],
+                'suggested_difficulty': None,
+                'is_specific': False
+            }
+
+        self._load_model()
+
+        if self.model is None:
+            logger.error("Model unavailable; returning fallback prompt analysis")
+            return {
+                'normalized_prompt': prompt,
+                'prompt_length': len(prompt.split()),
+                'top_categories': [],
+                'top_difficulties': [],
+                'detected_topics': [],
+                'suggested_difficulty': None,
+                'is_specific': False
+            }
+
+        normalized_prompt = self.normalize_category(prompt)
+
+        with torch.no_grad():
+            prompt_embedding = self.model.encode(
+                normalized_prompt,
+                convert_to_tensor=True
+            )
+
+        analysis: Dict[str, Any] = {
+            'normalized_prompt': normalized_prompt,
+            'prompt_length': len(normalized_prompt.split()),
+            'top_categories': [],
+            'top_difficulties': [],
+            'detected_topics': [],
+            'suggested_difficulty': None,
+            'is_specific': False
         }
+
+        if self.category_embeddings:
+            labels = list(self.category_embeddings.keys())
+            matrix = torch.stack([self.category_embeddings[label] for label in labels])
+            with torch.no_grad():
+                scores = util.cos_sim(prompt_embedding, matrix)[0].cpu().numpy()
+            top_idx = np.argsort(scores)[::-1][:max_categories]
+            for idx in top_idx:
+                analysis['top_categories'].append({
+                    'name': labels[idx],
+                    'score': float(scores[idx])
+                })
+
+        if self.difficulty_embeddings:
+            labels = list(self.difficulty_embeddings.keys())
+            matrix = torch.stack([self.difficulty_embeddings[label] for label in labels])
+            with torch.no_grad():
+                scores = util.cos_sim(prompt_embedding, matrix)[0].cpu().numpy()
+            top_idx = np.argsort(scores)[::-1]
+            for idx in top_idx[:max(1, max_categories)]:
+                analysis['top_difficulties'].append({
+                    'name': labels[idx],
+                    'score': float(scores[idx])
+                })
+            if analysis['top_difficulties']:
+                analysis['suggested_difficulty'] = analysis['top_difficulties'][0]['name']
+
+        if isinstance(self.course_embeddings, torch.Tensor) and self.course_embeddings.numel() > 0:
+            with torch.no_grad():
+                scores = util.cos_sim(prompt_embedding, self.course_embeddings)[0].cpu().numpy()
+            top_indices = np.argsort(scores)[::-1][:10]
+            topics: List[str] = []
+            for idx in top_indices:
+                course = self.courses_data[idx]
+                for keyword in course.get('keywords') or []:
+                    if keyword and keyword.lower() not in topics:
+                        topics.append(keyword.lower())
+                if not course.get('keywords') and course.get('title'):
+                    for word in re.findall(r"[a-zA-Z0-9+#]{3,}", course['title']):
+                        lower = word.lower()
+                        if lower not in topics:
+                            topics.append(lower)
+            analysis['detected_topics'] = topics[:max_topics]
+
+        analysis['is_specific'] = (
+            len(analysis['detected_topics']) >= 3
+            or (analysis['top_categories'] and analysis['top_categories'][0]['score'] >= 0.55)
+            or analysis['prompt_length'] >= 12
+        )
+
+        if prompt_context:
+            analysis['context'] = prompt_context
+
+        return analysis
+
+    def _update_aggregate_embeddings(self) -> None:
+        """Aggregate course embeddings for categories and difficulties."""
+        if not isinstance(self.course_embeddings, torch.Tensor) or self.course_embeddings.numel() == 0:
+            self.category_embeddings = {}
+            self.difficulty_embeddings = {}
+            return
+
+        category_index_map: Dict[str, List[int]] = defaultdict(list)
+        difficulty_index_map: Dict[str, List[int]] = defaultdict(list)
+
+        for idx, course in enumerate(self.courses_data):
+            category_name = course.get('category', {}).get('name')
+            if category_name:
+                category_index_map[category_name].append(idx)
+
+            difficulty_name = course.get('difficulty', {}).get('name')
+            if difficulty_name:
+                difficulty_index_map[difficulty_name].append(idx)
+
+        self.category_embeddings = self._aggregate_embeddings(category_index_map)
+        self.difficulty_embeddings = self._aggregate_embeddings(difficulty_index_map)
+
+    def _aggregate_embeddings(self, index_map: Dict[str, List[int]]) -> Dict[str, torch.Tensor]:
+        aggregates: Dict[str, torch.Tensor] = {}
+        for label, indices in index_map.items():
+            if not indices:
+                continue
+            vectors = self.course_embeddings[indices]
+            mean_vector = vectors if vectors.ndim == 1 else vectors.mean(dim=0)
+            norm = torch.norm(mean_vector)
+            if torch.isfinite(norm) and norm > 0:
+                aggregates[label] = mean_vector / norm
+        return aggregates
 
 
 # Global AI engine instance

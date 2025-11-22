@@ -1,14 +1,16 @@
 """
 FastAPI application for STIBAP Course Recommendation System
 """
-from fastapi import FastAPI, HTTPException, Depends, Request, UploadFile, File, Query
-from fastapi.middleware.cors import CORSMiddleware
+import asyncio
 from contextlib import asynccontextmanager
 from datetime import datetime
 import logging
 import tempfile
 from pathlib import Path
 from typing import Optional
+
+from fastapi import FastAPI, HTTPException, Depends, Request, UploadFile, File, Query
+from fastapi.middleware.cors import CORSMiddleware
 
 from config import settings
 from database import db
@@ -27,6 +29,39 @@ from models import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+_course_index_lock = asyncio.Lock()
+
+
+async def ensure_ai_course_index(force: bool = False) -> int:
+    """Ensure the AI engine has up-to-date course embeddings."""
+    async with _course_index_lock:
+        embeddings = ai_engine.course_embeddings
+        embeddings_ready = (
+            not force
+            and ai_engine.courses_data
+            and embeddings is not None
+            and hasattr(embeddings, "numel")
+            and callable(getattr(embeddings, "numel"))
+        )
+
+        if embeddings_ready:
+            try:
+                if embeddings.numel() > 0:
+                    return len(ai_engine.courses_data)
+            except Exception:
+                logger.warning("Failed to inspect course embeddings; rebuilding index", exc_info=True)
+
+        try:
+            courses = await db.get_all_courses()
+            if not isinstance(courses, list):
+                logger.warning("Unexpected course payload from database: %s", type(courses))
+                courses = courses or []
+            ai_engine.preprocess_course_data(courses)
+            return len(ai_engine.courses_data)
+        except Exception as index_error:
+            logger.error("Failed to refresh AI course index: %s", index_error, exc_info=True)
+            raise
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -35,9 +70,8 @@ async def lifespan(app: FastAPI):
     logger.info("Starting up STIBAP AI Engine...")
     try:
         # Load all courses and create embeddings
-        courses = await db.get_all_courses()
-        ai_engine.preprocess_course_data(courses)
-        logger.info(f"Indexed {len(courses)} courses")
+        indexed = await ensure_ai_course_index(force=True)
+        logger.info(f"Indexed {indexed} courses")
     except Exception as e:
         logger.error(f"Error during startup: {e}")
     
@@ -172,6 +206,62 @@ async def get_courses(category_id: str = None):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/api/courses/{course_id}/outline")
+async def get_course_outline(course_id: str, include_content: bool = True):
+    """Return course outline (modules & units). Per request, includes full unit content for all units."""
+    try:
+        outline = await db.get_course_outline(course_id)
+        if not outline:
+            raise HTTPException(status_code=404, detail="Course not found")
+        # include_content is ignored since we always return full content now, but kept for compatibility
+        return {"success": True, "data": outline}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching course outline: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/courses/{course_id}/progress")
+async def get_course_progress(request: Request, course_id: str):
+    """Return the current user's progress for a course."""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        user = db.get_user_by_session(session_token)
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid session")
+        summary = await db.get_user_course_progress(user_id=user.get('id'), course_id=course_id)
+        return {"success": True, "data": summary}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching progress: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/courses/{course_id}/units/{unit_id}/complete")
+async def complete_unit(request: Request, course_id: str, unit_id: str):
+    """Mark a unit as completed for the current user and update roll-up progress."""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        user = db.get_user_by_session(session_token)
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid session")
+        result = await db.complete_unit(user_id=user.get('id'), course_id=course_id, unit_id=unit_id)
+        if not result.get('success'):
+            raise HTTPException(status_code=400, detail=result.get('error', 'Failed to complete unit'))
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error completing unit: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/api/courses/{course_id}")
 async def get_course(course_id: str):
     """Get a specific course"""
@@ -242,17 +332,36 @@ async def get_recommendations(request: RecommendationRequest):
             )
         
         # Generate new recommendations
+        # Analyze the prompt first to enrich context
+        prompt_analysis = ai_engine.analyze_prompt(
+            prompt=request.prompt,
+            prompt_context=request.prompt_context
+        )
+
+        # Apply inferred difficulty/category if explicit filters were not provided
+        inferred_difficulty = request.difficulty_filter or (
+            prompt_analysis.get('suggested_difficulty')
+            if prompt_analysis.get('suggested_difficulty') in {
+                diff.get('name')
+                for diff in prompt_analysis.get('top_difficulties', [])
+            }
+            else None
+        )
+
+        inferred_categories = request.category_filter or [
+            category.get('name')
+            for category in prompt_analysis.get('top_categories', [])
+            if category.get('name')
+        ] or None
+
         results = ai_engine.get_recommendations(
-            user_prompt=request.prompt,
+            user_prompt=prompt_analysis.get('normalized_prompt', request.prompt),
             top_k=request.top_k,
             min_score=request.min_score,
-            difficulty_filter=request.difficulty_filter,
-            category_filter=request.category_filter
+            difficulty_filter=inferred_difficulty,
+            category_filter=inferred_categories
         )
-        
-        # Analyze the prompt
-        analysis = ai_engine.analyze_prompt(request.prompt)
-        
+
         # Format recommendations
         recommendations = []
         confidence_scores = {}
@@ -290,7 +399,7 @@ async def get_recommendations(request: RecommendationRequest):
         return RecommendationResponse(
             recommendations=recommendations,
             total_found=len(recommendations),
-            prompt_analysis=analysis,
+            prompt_analysis=prompt_analysis,
             cached=False
         )
         
@@ -343,6 +452,7 @@ async def update_user_preferences(user_id: str, preferences: UserPreferencesUpda
 async def complete_onboarding(request: OnboardingCompleteRequest):
     """Complete onboarding process"""
     try:
+        await ensure_ai_course_index()
         # Create or update preferences
         existing = await db.get_user_preferences(request.user_id)
         
@@ -413,6 +523,7 @@ async def update_progress(user_id: str, progress: CourseProgressUpdate):
 async def get_user_recommendations(user_id: str, top_k: int = 10):
     """Get user's personalized recommendations based on their preferences"""
     try:
+        await ensure_ai_course_index()
         # Get user preferences
         preferences = await db.get_user_preferences(user_id)
         
@@ -649,10 +760,44 @@ async def import_course(
         logger.error(f"Exception during course import: {e}")
         raise HTTPException(status_code=500, detail="Course import failed")
 
+
+@app.put("/api/admin/courses/{course_id}/category")
+async def update_course_category(request: Request, course_id: str, data: dict):
+    """Update a course's category (admin only)."""
+    try:
+        session_token = get_session_token(request)
+        if not session_token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+
+        category_id = data.get('category_id') if isinstance(data, dict) else None
+        if not category_id:
+            raise HTTPException(status_code=400, detail="category_id is required")
+
+        result = await db.admin_update_course_category(
+            session_token=session_token,
+            course_id=course_id,
+            category_id=category_id
+        )
+
+        if not result.get('success'):
+            raise HTTPException(status_code=400, detail=result.get('error', 'Failed to update course category'))
+
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating course category: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/api/admin/reload-courses")
 async def reload_courses():
     """Reload courses and regenerate embeddings (admin only)"""
     try:
+        courses = await db.get_all_courses()
+        if not isinstance(courses, list):
+            logger.warning("Unexpected course payload when reloading: %s", type(courses))
+            courses = courses or []
+
         ai_engine.preprocess_course_data(courses)
         return {
             "success": True,

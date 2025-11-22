@@ -68,6 +68,30 @@ class APIClient {
     return this.request(`/api/courses/${courseId}`);
   }
 
+  async getCourseOutline(courseId) {
+    // per requirement, backend returns full content for all units
+    return this.request(`/api/courses/${courseId}/outline?include_content=true`);
+  }
+
+  async getCourseProgress(courseId, sessionToken) {
+    return this.request(`/api/courses/${courseId}/progress`, {
+      headers: {
+        Authorization: `Bearer ${sessionToken}`
+      },
+      credentials: 'include'
+    });
+  }
+
+  async completeUnit(courseId, unitId, sessionToken) {
+    return this.request(`/api/courses/${courseId}/units/${unitId}/complete`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`
+      },
+      credentials: 'include'
+    });
+  }
+
   async getSimilarCourses(courseId, topK = 5) {
     return this.request(`/api/courses/${courseId}/similar?top_k=${topK}`);
   }

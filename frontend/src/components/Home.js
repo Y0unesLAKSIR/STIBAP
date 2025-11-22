@@ -37,9 +37,8 @@ const Home = () => {
   };
 
   const handleCourseClick = (courseId) => {
-    // TODO: Navigate to course detail page when implemented
-    console.log('Course clicked:', courseId);
-    alert('Course details coming soon! 🚀');
+    if (!courseId) return;
+    navigate(`/courses/${courseId}`);
   };
 
   return (

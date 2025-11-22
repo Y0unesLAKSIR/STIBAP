@@ -31,6 +31,7 @@ class RecommendationRequest(BaseModel):
     min_score: Optional[float] = Field(default=0.3, ge=0.0, le=1.0)
     difficulty_filter: Optional[str] = None
     category_filter: Optional[List[str]] = None
+    prompt_context: Optional[Dict[str, Any]] = None
 
 
 class CourseRecommendation(BaseModel):

@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Onboarding from './components/Onboarding';
 import Settings from './components/Settings';
 import Admin from './components/Admin';
+import CoursePlayer from './components/CoursePlayer';
 import ProtectedRoute from './components/ProtectedRoute';
 import OnboardingCheck from './components/OnboardingCheck';
 
@@ -49,6 +50,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Admin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:courseId"
+            element={
+              <ProtectedRoute>
+                <CoursePlayer />
               </ProtectedRoute>
             }
           />

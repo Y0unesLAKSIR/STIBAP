@@ -1,0 +1,39 @@
+.progressbar {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.progressbar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progressbar__label {
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.progressbar__value {
+  font-weight: 700;
+  color: #667eea;
+}
+
+.progressbar__track {
+  width: 100%;
+  height: 10px;
+  background: #edf2f7;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressbar__fill {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}

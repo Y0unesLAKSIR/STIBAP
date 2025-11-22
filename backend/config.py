@@ -19,7 +19,10 @@ class Settings(BaseSettings):
     api_reload: bool = True
     
     # CORS
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: str = (
+        "http://localhost:3000,http://127.0.0.1:3000,"
+        "http://localhost:5173,http://127.0.0.1:5173"
+    )
     
     # AI Model Configuration
     model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
