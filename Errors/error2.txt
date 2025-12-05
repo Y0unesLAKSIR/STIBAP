@@ -1,0 +1,150 @@
+PS C:\DEV\PFA> backend\QUICK_START.bat
+===================================
+STIBAP Backend Quick Start
+===================================
+
+[1/4] Checking Python...
+Python 3.12.1
+
+[2/4] Activating virtual environment...
+
+[3/4] Installing dependencies...
+Requirement already satisfied: fastapi==0.104.1 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 2)) (0.104.1)
+Requirement already satisfied: uvicorn[standard]==0.24.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 3)) (0.24.0)
+Requirement already satisfied: pydantic==2.5.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 4)) (2.5.0)
+Requirement already satisfied: python-multipart==0.0.6 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 5)) (0.0.6)
+Requirement already satisfied: transformers==4.35.2 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 8)) (4.35.2)
+Requirement already satisfied: torch>=2.2.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 9)) (2.9.1)
+Requirement already satisfied: torchvision>=0.17.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 10)) (0.24.1)
+Requirement already satisfied: torchaudio>=2.2.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 11)) (2.9.1)
+Requirement already satisfied: sentence-transformers==2.2.2 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 12)) (2.2.2)
+Requirement already satisfied: scikit-learn==1.3.2 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 13)) (1.3.2)
+Requirement already satisfied: numpy==1.26.2 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 14)) (1.26.2)
+Requirement already satisfied: pandas==2.1.3 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 15)) (2.1.3)
+Requirement already satisfied: datasets==2.15.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 18)) (2.15.0)
+Requirement already satisfied: huggingface-hub==0.19.4 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 19)) (0.19.4)
+Requirement already satisfied: supabase==2.0.3 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 22)) (2.0.3)
+Requirement already satisfied: python-dotenv==1.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 23)) (1.0.0)
+Requirement already satisfied: python-jose[cryptography]==3.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 26)) (3.3.0)
+Requirement already satisfied: passlib[bcrypt]==1.7.4 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 27)) (1.7.4)
+Requirement already satisfied: httpx==0.24.1 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 30)) (0.24.1)
+Requirement already satisfied: requests==2.31.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 31)) (2.31.0)
+Requirement already satisfied: pydantic-settings==2.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from -r requirements.txt (line 34)) (2.1.0)
+Requirement already satisfied: anyio<4.0.0,>=3.7.1 in c:\dev\pfa\backend\venv\lib\site-packages (from fastapi==0.104.1->-r requirements.txt (line 2)) (3.7.1)
+Requirement already satisfied: starlette<0.28.0,>=0.27.0 in c:\dev\pfa\backend\venv\lib\site-packages (from fastapi==0.104.1->-r requirements.txt (line 2)) (0.27.0)
+Requirement already satisfied: typing-extensions>=4.8.0 in c:\dev\pfa\backend\venv\lib\site-packages (from fastapi==0.104.1->-r requirements.txt (line 2)) (4.15.0)
+Requirement already satisfied: click>=7.0 in c:\dev\pfa\backend\venv\lib\site-packages (from uvicorn[standard]==0.24.0->-r requirements.txt (line 3)) (8.3.1)
+Requirement already satisfied: h11>=0.8 in c:\dev\pfa\backend\venv\lib\site-packages (from uvicorn[standard]==0.24.0->-r requirements.txt (line 3)) (0.14.0)
+Requirement already satisfied: colorama>=0.4 in c:\dev\pfa\backend\venv\lib\site-packages (from uvicorn[standard]==0.24.0->-r requirements.txt (line 3)) (0.4.6)
+Requirement already satisfied: httptools>=0.5.0 in c:\dev\pfa\backend\venv\lib\site-packages (from uvicorn[standard]==0.24.0->-r requirements.txt (line 3)) (0.7.1)
+Requirement already satisfied: pyyaml>=5.1 in c:\dev\pfa\backend\venv\lib\site-packages (from uvicorn[standard]==0.24.0->-r requirements.txt (line 3)) (6.0.3)
+Requirement already satisfied: watchfiles>=0.13 in c:\dev\pfa\backend\venv\lib\site-packages (from uvicorn[standard]==0.24.0->-r requirements.txt (line 3)) (1.1.1)
+Requirement already satisfied: websockets>=10.4 in c:\dev\pfa\backend\venv\lib\site-packages (from uvicorn[standard]==0.24.0->-r requirements.txt (line 3)) (12.0)
+Requirement already satisfied: annotated-types>=0.4.0 in c:\dev\pfa\backend\venv\lib\site-packages (from pydantic==2.5.0->-r requirements.txt (line 4)) (0.7.0)
+Requirement already satisfied: pydantic-core==2.14.1 in c:\dev\pfa\backend\venv\lib\site-packages (from pydantic==2.5.0->-r requirements.txt (line 4)) (2.14.1)
+Requirement already satisfied: filelock in c:\dev\pfa\backend\venv\lib\site-packages (from transformers==4.35.2->-r requirements.txt (line 8)) (3.20.0)
+Requirement already satisfied: packaging>=20.0 in c:\dev\pfa\backend\venv\lib\site-packages (from transformers==4.35.2->-r requirements.txt (line 8)) (25.0)
+Requirement already satisfied: regex!=2019.12.17 in c:\dev\pfa\backend\venv\lib\site-packages (from transformers==4.35.2->-r requirements.txt (line 8)) (2025.11.3)
+Requirement already satisfied: tokenizers<0.19,>=0.14 in c:\dev\pfa\backend\venv\lib\site-packages (from transformers==4.35.2->-r requirements.txt (line 8)) (0.15.2)
+Requirement already satisfied: safetensors>=0.3.1 in c:\dev\pfa\backend\venv\lib\site-packages (from transformers==4.35.2->-r requirements.txt (line 8)) (0.7.0)
+Requirement already satisfied: tqdm>=4.27 in c:\dev\pfa\backend\venv\lib\site-packages (from transformers==4.35.2->-r requirements.txt (line 8)) (4.67.1)
+Requirement already satisfied: scipy in c:\dev\pfa\backend\venv\lib\site-packages (from sentence-transformers==2.2.2->-r requirements.txt (line 12)) (1.16.3)
+Requirement already satisfied: nltk in c:\dev\pfa\backend\venv\lib\site-packages (from sentence-transformers==2.2.2->-r requirements.txt (line 12)) (3.9.2)
+Requirement already satisfied: sentencepiece in c:\dev\pfa\backend\venv\lib\site-packages (from sentence-transformers==2.2.2->-r requirements.txt (line 12)) (0.2.1)
+Requirement already satisfied: joblib>=1.1.1 in c:\dev\pfa\backend\venv\lib\site-packages (from scikit-learn==1.3.2->-r requirements.txt (line 13)) (1.5.2)
+Requirement already satisfied: threadpoolctl>=2.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from scikit-learn==1.3.2->-r requirements.txt (line 13)) (3.6.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in c:\dev\pfa\backend\venv\lib\site-packages (from pandas==2.1.3->-r requirements.txt (line 15)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in c:\dev\pfa\backend\venv\lib\site-packages (from pandas==2.1.3->-r requirements.txt (line 15)) (2025.2)
+Requirement already satisfied: tzdata>=2022.1 in c:\dev\pfa\backend\venv\lib\site-packages (from pandas==2.1.3->-r requirements.txt (line 15)) (2025.2)
+Requirement already satisfied: pyarrow>=8.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (22.0.0)
+Requirement already satisfied: pyarrow-hotfix in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (0.7)
+Requirement already satisfied: dill<0.3.8,>=0.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (0.3.7)
+Requirement already satisfied: xxhash in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (3.6.0)
+Requirement already satisfied: multiprocess in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (0.70.15)
+Requirement already satisfied: fsspec[http]<=2023.10.0,>=2023.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (2023.10.0)
+Requirement already satisfied: aiohttp in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (3.13.2)
+Requirement already satisfied: gotrue<2.0.0,>=1.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (1.3.1)
+Requirement already satisfied: postgrest<0.14.0,>=0.10.8 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (0.13.2)
+Requirement already satisfied: realtime<2.0.0,>=1.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (1.0.6)
+Requirement already satisfied: storage3<0.7.0,>=0.5.3 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (0.6.1)
+Requirement already satisfied: supafunc<0.4.0,>=0.3.1 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (0.3.3)
+Requirement already satisfied: ecdsa!=0.15 in c:\dev\pfa\backend\venv\lib\site-packages (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (0.19.1)
+Requirement already satisfied: rsa in c:\dev\pfa\backend\venv\lib\site-packages (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (4.9.1)
+Requirement already satisfied: pyasn1 in c:\dev\pfa\backend\venv\lib\site-packages (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (0.6.1)
+Requirement already satisfied: cryptography>=3.4.0 in c:\dev\pfa\backend\venv\lib\site-packages (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (46.0.3)
+Requirement already satisfied: bcrypt>=3.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from passlib[bcrypt]==1.7.4->-r requirements.txt (line 27)) (5.0.0)
+Requirement already satisfied: certifi in c:\dev\pfa\backend\venv\lib\site-packages (from httpx==0.24.1->-r requirements.txt (line 30)) (2025.11.12)
+Requirement already satisfied: httpcore<0.18.0,>=0.15.0 in c:\dev\pfa\backend\venv\lib\site-packages (from httpx==0.24.1->-r requirements.txt (line 30)) (0.17.3)
+Requirement already satisfied: idna in c:\dev\pfa\backend\venv\lib\site-packages (from httpx==0.24.1->-r requirements.txt (line 30)) (3.11)
+Requirement already satisfied: sniffio in c:\dev\pfa\backend\venv\lib\site-packages (from httpx==0.24.1->-r requirements.txt (line 30)) (1.3.1)
+Requirement already satisfied: charset-normalizer<4,>=2 in c:\dev\pfa\backend\venv\lib\site-packages (from requests==2.31.0->-r requirements.txt (line 31)) (3.4.4)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\dev\pfa\backend\venv\lib\site-packages (from requests==2.31.0->-r requirements.txt (line 31)) (2.5.0)
+Requirement already satisfied: sympy>=1.13.3 in c:\dev\pfa\backend\venv\lib\site-packages (from torch>=2.2.0->-r requirements.txt (line 9)) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in c:\dev\pfa\backend\venv\lib\site-packages (from torch>=2.2.0->-r requirements.txt (line 9)) (3.5)
+Requirement already satisfied: jinja2 in c:\dev\pfa\backend\venv\lib\site-packages (from torch>=2.2.0->-r requirements.txt (line 9)) (3.1.6)
+Requirement already satisfied: setuptools in c:\dev\pfa\backend\venv\lib\site-packages (from torch>=2.2.0->-r requirements.txt (line 9)) (80.9.0)
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from torchvision>=0.17.0->-r requirements.txt (line 10)) (12.0.0)
+Requirement already satisfied: cffi>=2.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (2.0.0)
+Requirement already satisfied: six>=1.9.0 in c:\dev\pfa\backend\venv\lib\site-packages (from ecdsa!=0.15->python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (1.17.0)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (1.4.0)
+Requirement already satisfied: attrs>=17.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (25.4.0)
+Requirement already satisfied: frozenlist>=1.1.1 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (1.8.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (6.7.0)
+Requirement already satisfied: propcache>=0.2.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (0.4.1)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (1.22.0)
+Requirement already satisfied: deprecation<3.0.0,>=2.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from postgrest<0.14.0,>=0.10.8->supabase==2.0.3->-r requirements.txt (line 22)) (2.1.0)
+Requirement already satisfied: strenum<0.5.0,>=0.4.9 in c:\dev\pfa\backend\venv\lib\site-packages (from postgrest<0.14.0,>=0.10.8->supabase==2.0.3->-r requirements.txt (line 22)) (0.4.15)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from sympy>=1.13.3->torch>=2.2.0->-r requirements.txt (line 9)) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in c:\dev\pfa\backend\venv\lib\site-packages (from jinja2->torch>=2.2.0->-r requirements.txt (line 9)) (3.0.3)
+Requirement already satisfied: pycparser in c:\dev\pfa\backend\venv\lib\site-packages (from cffi>=2.0.0->cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (2.23)
+
+[notice] A new release of pip is available: 23.2.1 -> 25.3
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+[4/4] Starting backend server...
+Backend will run on http://localhost:8000
+Press CTRL+C to stop
+
+C:\DEV\PFA\backend\venv\Lib\site-packages\transformers\utils\generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+C:\DEV\PFA\backend\venv\Lib\site-packages\transformers\utils\generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device: cpu
+INFO:ai_engine:Loaded sentence transformer model 'sentence-transformers/all-MiniLM-L6-v2' into memory
+C:\DEV\PFA\backend\venv\Lib\site-packages\pydantic\_internal\_fields.py:149: UserWarning: Field "model_loaded" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+INFO:     Will watch for changes in these directories: ['C:\\DEV\\PFA\\backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [29976] using WatchFiles
+C:\DEV\PFA\backend\venv\Lib\site-packages\transformers\utils\generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+C:\DEV\PFA\backend\venv\Lib\site-packages\transformers\utils\generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device: cpu
+INFO:ai_engine:Loaded sentence transformer model 'sentence-transformers/all-MiniLM-L6-v2' into memory
+C:\DEV\PFA\backend\venv\Lib\site-packages\pydantic\_internal\_fields.py:149: UserWarning: Field "model_loaded" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+INFO:     Started server process [16412]
+INFO:     Waiting for application startup.
+INFO:main:Starting up STIBAP AI Engine...
+INFO:httpx:HTTP Request: GET https://zgeamlsavitecqfrtiaa.supabase.co/rest/v1/courses?select=%2A%2C%20category%3Acategories%28%2A%29%2C%20difficulty%3Adifficulty_levels%28%2A%29&is_active=eq.True "HTTP/1.1 400 Bad Request"
+ERROR:main:Failed to refresh AI course index: {'code': 'PGRST200', 'details': "Searched for a foreign key relationship between 'courses' and 'categories' in the schema 'public', but no matches were found.", 'hint': None, 'message': "Could not find a relationship between 'courses' and 'categories' in the schema cache"}
+Traceback (most recent call last):
+  File "C:\DEV\PFA\backend\main.py", line 55, in ensure_ai_course_index
+    courses = await db.get_all_courses()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\DEV\PFA\backend\database.py", line 120, in get_all_courses
+    .execute()
+     ^^^^^^^^^
+  File "C:\DEV\PFA\backend\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 70, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST200', 'details': "Searched for a foreign key relationship between 'courses' and 'categories' in the schema 'public', but no matches were found.", 'hint': None, 'message': "Could not find a relationship between 'courses' and 'categories' in the schema cache"}
+ERROR:main:Error during startup: {'code': 'PGRST200', 'details': "Searched for a foreign key relationship between 'courses' and 'categories' in the schema 'public', but no matches were found.", 'hint': None, 'message': "Could not find a relationship between 'courses' and 'categories' in the schema cache"}
+INFO:     Application startup complete.

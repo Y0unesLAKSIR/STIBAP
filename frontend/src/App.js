@@ -10,13 +10,18 @@ import Admin from './components/Admin';
 import CoursePlayer from './components/CoursePlayer';
 import ProtectedRoute from './components/ProtectedRoute';
 import OnboardingCheck from './components/OnboardingCheck';
+import PerformancePage from './pages/PerformancePage';
+import MathDiagnosticPage from './pages/MathDiagnosticPage';
+import StudentProfilePage from './pages/StudentProfilePage';
+import LandingPage from './pages/LandingPage';
+import SubjectSelectionPage from './pages/SubjectSelectionPage';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
@@ -58,6 +63,47 @@ function App() {
             element={
               <ProtectedRoute>
                 <CoursePlayer />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/diagnostic"
+            element={
+              <ProtectedRoute>
+                <SubjectSelectionPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/diagnostic/math"
+            element={
+              <ProtectedRoute>
+                <MathDiagnosticPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <StudentProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/results"
+            element={
+              <ProtectedRoute>
+                <PerformancePage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Legacy route kept for compatibility or direct access if needed */}
+          <Route
+            path="/performance"
+            element={
+              <ProtectedRoute>
+                <MathDiagnosticPage />
               </ProtectedRoute>
             }
           />

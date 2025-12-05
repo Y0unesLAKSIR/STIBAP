@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import settings
 from database import db
 from ai_engine import ai_engine
+from performance_service import performance_service, PerformanceInput
 from models import (
     RecommendationRequest,
     RecommendationResponse,
@@ -68,12 +69,12 @@ async def lifespan(app: FastAPI):
     """Lifespan events for the application"""
     # Startup
     logger.info("Starting up STIBAP AI Engine...")
-    try:
-        # Load all courses and create embeddings
-        indexed = await ensure_ai_course_index(force=True)
-        logger.info(f"Indexed {indexed} courses")
-    except Exception as e:
-        logger.error(f"Error during startup: {e}")
+    # try:
+    #     # Load all courses and create embeddings
+    #     indexed = await ensure_ai_course_index(force=True)
+    #     logger.info(f"Indexed {indexed} courses")
+    # except Exception as e:
+    #     logger.error(f"Error during startup: {e}")
     
     yield
     
@@ -286,6 +287,40 @@ async def get_similar_courses(course_id: str, top_k: int = 5):
     except Exception as e:
         logger.error(f"Error finding similar courses: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================
+# AI Recommendation Endpoints
+# ============================================
+
+from qcm_service import qcm_service
+
+# ============================================
+# QCM Diagnostic Endpoints
+# ============================================
+
+@app.get("/api/qcm/questions")
+async def get_qcm_questions(count: int = 10):
+    """Get random QCM questions for diagnostic"""
+    return {"success": True, "data": qcm_service.get_questions(count)}
+
+@app.post("/api/qcm/submit")
+async def submit_qcm(answers: dict):
+    """Submit QCM answers and get score"""
+    # answers format: {"1": 2, "2": 0} where key is question_id, value is selected_index
+    result = qcm_service.calculate_score(answers)
+    return {"success": True, "data": result}
+
+# ============================================
+# Performance Prediction Endpoints
+# ============================================
+
+@app.post("/api/performance/predict")
+async def predict_performance(input_data: PerformanceInput):
+    result = performance_service.predict_performance(input_data)
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+    return result
 
 
 # ============================================

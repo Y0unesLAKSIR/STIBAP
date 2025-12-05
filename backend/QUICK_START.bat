@@ -25,6 +25,11 @@ echo.
 
 echo [3/4] Installing dependencies...
 pip install -r requirements.txt
+if %errorlevel% neq 0 (
+    echo ERROR: Failed to install dependencies.
+    pause
+    exit /b 1
+)
 echo.
 
 echo [4/4] Starting backend server...
