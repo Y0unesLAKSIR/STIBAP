@@ -1,0 +1,242 @@
+front error : 
+PS C:\DEV\PFA\frontend> npm start
+
+> stibap-frontend@0.1.0 start
+> react-scripts start
+√ Something is already running on port 3000.
+
+Would you like to run the app on another port instead? ... yes
+(node:10232) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:10232) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+Compiled with warnings.
+
+Module not found: Error: Can't resolve 'react-markdown' in 'C:\DEV\PFA\frontend\src\components'
+
+Module not found: Error: Can't resolve 'remark-gfm' in 'C:\DEV\PFA\frontend\src\components'
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in ./src/components/CoursePlayer.jsx 51:32-56
+Module not found: Error: Can't resolve 'react-markdown' in 'C:\DEV\PFA\frontend\src\components'
+
+WARNING in ./src/components/CoursePlayer.jsx 51:58-78
+Module not found: Error: Can't resolve 'remark-gfm' in 'C:\DEV\PFA\frontend\src\components'
+
+webpack compiled with 2 warnings
+Compiling...
+Compiled with warnings.
+
+Module not found: Error: Can't resolve 'react-markdown' in 'C:\DEV\PFA\frontend\src\components'
+
+Module not found: Error: Can't resolve 'remark-gfm' in 'C:\DEV\PFA\frontend\src\components'
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+LOG from webpack.FileSystemInfo
+<w> Managed item C:\DEV\PFA\frontend\node_modules\remark-gfm isn't a directory or doesn't contain a package.json (see snapshot.managedPaths option)
+<w> Managed item C:\DEV\PFA\frontend\node_modules\react-markdown isn't a directory or doesn't contain a package.json (see snapshot.managedPaths option)
++ 14 hidden lines
+
+WARNING in ./src/components/CoursePlayer.jsx 51:32-56
+Module not found: Error: Can't resolve 'react-markdown' in 'C:\DEV\PFA\frontend\src\components'
+
+WARNING in ./src/components/CoursePlayer.jsx 51:58-78
+Module not found: Error: Can't resolve 'remark-gfm' in 'C:\DEV\PFA\frontend\src\components'
+
+webpack compiled with 2 warnings
+Compiling...
+Compiled with warnings.
+
+Module not found: Error: Can't resolve 'react-markdown' in 'C:\DEV\PFA\frontend\src\components'
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+LOG from webpack.FileSystemInfo
+<w> Managed item C:\DEV\PFA\frontend\node_modules\remark-gfm isn't a directory or doesn't contain a package.json (see snapshot.managedPaths option)
++ 13 hidden lines
+
+WARNING in ./src/components/CoursePlayer.jsx 51:32-56
+Module not found: Error: Can't resolve 'react-markdown' in 'C:\DEV\PFA\frontend\src\components'
+
+webpack compiled with 1 warning
+Compiling...
+Compiled with warnings.
+
+Module not found: Error: Can't resolve 'react-markdown' in 'C:\DEV\PFA\frontend\src\components'
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in ./src/components/CoursePlayer.jsx 51:32-56
+Module not found: Error: Can't resolve 'react-markdown' in 'C:\DEV\PFA\frontend\src\components'
+
+webpack compiled with 1 warning
+PS C:\DEV\PFA\frontend> npm start
+
+> stibap-frontend@0.1.0 start
+> react-scripts start
+√ Something is already running on port 3000.
+
+Would you like to run the app on another port instead? ... yes
+(node:34616) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:34616) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+Compiled with warnings.
+
+[eslint]
+src\components\Admin.js
+  Line 44:6:  React Hook useEffect has missing dependencies: 'fetchAdminCourses', 'fetchCategories', and 'fetchCourses'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\CoursePlayer.jsx
+  Line 1:47:  'useRef' is defined but never used                                                                                                                                                             no-unused-vars
+  Line 9:5:   'ReactMarkdownMod' is assigned a value but never used                                                                                                                                          no-unused-vars
+  Line 10:5:  'remarkGfmMod' is assigned a value but never used                                                                                                                                              no-unused-vars
+  Line 42:9:  The 'modules' logical expression could make the dependencies of useMemo Hook (at line 50) change on every render. To fix this, wrap the initialization of 'modules' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  Line 42:9:  The 'modules' logical expression could make the dependencies of useMemo Hook (at line 57) change on every render. To fix this, wrap the initialization of 'modules' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+src\components\Home.js
+  Line 15:6:  React Hook useEffect has a missing dependency: 'loadRecommendations'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\Onboarding.js
+  Line 17:10:  'selectedCategories' is assigned a value but never used  no-unused-vars
+  Line 23:10:  'mainCategories' is assigned a value but never used      no-unused-vars
+  Line 104:9:  'toggleCategory' is assigned a value but never used      no-unused-vars
+
+src\components\OnboardingCheck.js
+  Line 13:6:  React Hook useEffect has a missing dependency: 'checkOnboarding'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint]
+src\components\Admin.js
+  Line 44:6:  React Hook useEffect has missing dependencies: 'fetchAdminCourses', 'fetchCategories', and 'fetchCourses'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\CoursePlayer.jsx
+  Line 1:47:  'useRef' is defined but never used                                                                                                                                                             no-unused-vars
+  Line 9:5:   'ReactMarkdownMod' is assigned a value but never used                                                                                                                                          no-unused-vars
+  Line 10:5:  'remarkGfmMod' is assigned a value but never used                                                                                                                                              no-unused-vars
+  Line 42:9:  The 'modules' logical expression could make the dependencies of useMemo Hook (at line 50) change on every render. To fix this, wrap the initialization of 'modules' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  Line 42:9:  The 'modules' logical expression could make the dependencies of useMemo Hook (at line 57) change on every render. To fix this, wrap the initialization of 'modules' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+src\components\Home.js
+  Line 15:6:  React Hook useEffect has a missing dependency: 'loadRecommendations'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\Onboarding.js
+  Line 17:10:  'selectedCategories' is assigned a value but never used  no-unused-vars
+  Line 23:10:  'mainCategories' is assigned a value but never used      no-unused-vars
+  Line 104:9:  'toggleCategory' is assigned a value but never used      no-unused-vars
+
+src\components\OnboardingCheck.js
+  Line 13:6:  React Hook useEffect has a missing dependency: 'checkOnboarding'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+
+backend error : 
+satisfied: tqdm>=4.27 in c:\dev\pfa\backend\venv\lib\site-packages (from transformers==4.35.2->-r requirements.txt (line 8)) (4.67.1)
+Requirement already satisfied: scipy in c:\dev\pfa\backend\venv\lib\site-packages (from sentence-transformers==2.2.2->-r requirements.txt (line 12)) (1.16.3)
+Requirement already satisfied: nltk in c:\dev\pfa\backend\venv\lib\site-packages (from sentence-transformers==2.2.2->-r requirements.txt (line 12)) (3.9.2)
+Requirement already satisfied: sentencepiece in c:\dev\pfa\backend\venv\lib\site-packages (from sentence-transformers==2.2.2->-r requirements.txt (line 12)) (0.2.1)
+Requirement already satisfied: joblib>=1.1.1 in c:\dev\pfa\backend\venv\lib\site-packages (from scikit-learn==1.3.2->-r requirements.txt (line 13)) (1.5.2)
+Requirement already satisfied: threadpoolctl>=2.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from scikit-learn==1.3.2->-r requirements.txt (line 13)) (3.6.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in c:\dev\pfa\backend\venv\lib\site-packages (from pandas==2.1.3->-r requirements.txt (line 15)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in c:\dev\pfa\backend\venv\lib\site-packages (from pandas==2.1.3->-r requirements.txt (line 15)) (2025.2)
+Requirement already satisfied: tzdata>=2022.1 in c:\dev\pfa\backend\venv\lib\site-packages (from pandas==2.1.3->-r requirements.txt (line 15)) (2025.2)
+Requirement already satisfied: pyarrow>=8.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (22.0.0)
+Requirement already satisfied: pyarrow-hotfix in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (0.7)
+Requirement already satisfied: dill<0.3.8,>=0.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (0.3.7)
+Requirement already satisfied: xxhash in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (3.6.0)
+Requirement already satisfied: multiprocess in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (0.70.15)
+Requirement already satisfied: fsspec[http]<=2023.10.0,>=2023.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (2023.10.0)
+Requirement already satisfied: aiohttp in c:\dev\pfa\backend\venv\lib\site-packages (from datasets==2.15.0->-r requirements.txt (line 18)) (3.13.2)
+Requirement already satisfied: gotrue<2.0.0,>=1.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (1.3.1)
+Requirement already satisfied: postgrest<0.14.0,>=0.10.8 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (0.13.2)
+Requirement already satisfied: realtime<2.0.0,>=1.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (1.0.6)
+Requirement already satisfied: storage3<0.7.0,>=0.5.3 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (0.6.1)
+Requirement already satisfied: supafunc<0.4.0,>=0.3.1 in c:\dev\pfa\backend\venv\lib\site-packages (from supabase==2.0.3->-r requirements.txt (line 22)) (0.3.3)
+Requirement already satisfied: ecdsa!=0.15 in c:\dev\pfa\backend\venv\lib\site-packages (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (0.19.1)
+Requirement already satisfied: rsa in c:\dev\pfa\backend\venv\lib\site-packages (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (4.9.1)
+Requirement already satisfied: pyasn1 in c:\dev\pfa\backend\venv\lib\site-packages (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (0.6.1)
+Requirement already satisfied: cryptography>=3.4.0 in c:\dev\pfa\backend\venv\lib\site-packages (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (46.0.3)
+Requirement already satisfied: bcrypt>=3.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from passlib[bcrypt]==1.7.4->-r requirements.txt (line 27)) (5.0.0)
+Requirement already satisfied: certifi in c:\dev\pfa\backend\venv\lib\site-packages (from httpx==0.24.1->-r requirements.txt (line 30)) (2025.11.12)
+Requirement already satisfied: httpcore<0.18.0,>=0.15.0 in c:\dev\pfa\backend\venv\lib\site-packages (from httpx==0.24.1->-r requirements.txt (line 30)) (0.17.3)
+Requirement already satisfied: idna in c:\dev\pfa\backend\venv\lib\site-packages (from httpx==0.24.1->-r requirements.txt (line 30)) (3.11)
+Requirement already satisfied: sniffio in c:\dev\pfa\backend\venv\lib\site-packages (from httpx==0.24.1->-r requirements.txt (line 30)) (1.3.1)
+Requirement already satisfied: charset-normalizer<4,>=2 in c:\dev\pfa\backend\venv\lib\site-packages (from requests==2.31.0->-r requirements.txt (line 31)) (3.4.4)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\dev\pfa\backend\venv\lib\site-packages (from requests==2.31.0->-r requirements.txt (line 31)) (2.5.0)
+Requirement already satisfied: sympy>=1.13.3 in c:\dev\pfa\backend\venv\lib\site-packages (from torch>=2.2.0->-r requirements.txt (line 9)) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in c:\dev\pfa\backend\venv\lib\site-packages (from torch>=2.2.0->-r requirements.txt (line 9)) (3.5)
+Requirement already satisfied: jinja2 in c:\dev\pfa\backend\venv\lib\site-packages (from torch>=2.2.0->-r requirements.txt (line 9)) (3.1.6)
+Requirement already satisfied: setuptools in c:\dev\pfa\backend\venv\lib\site-packages (from torch>=2.2.0->-r requirements.txt (line 9)) (80.9.0)
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from torchvision>=0.17.0->-r requirements.txt (line 10)) (12.0.0)
+Requirement already satisfied: cffi>=2.0.0 in c:\dev\pfa\backend\venv\lib\site-packages (from cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (2.0.0)
+Requirement already satisfied: six>=1.9.0 in c:\dev\pfa\backend\venv\lib\site-packages (from ecdsa!=0.15->python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (1.17.0)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (1.4.0)
+Requirement already satisfied: attrs>=17.3.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (25.4.0)
+Requirement already satisfied: frozenlist>=1.1.1 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (1.8.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (6.7.0)
+Requirement already satisfied: propcache>=0.2.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (0.4.1)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in c:\dev\pfa\backend\venv\lib\site-packages (from aiohttp->datasets==2.15.0->-r requirements.txt (line 18)) (1.22.0)
+Requirement already satisfied: deprecation<3.0.0,>=2.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from postgrest<0.14.0,>=0.10.8->supabase==2.0.3->-r requirements.txt (line 22)) (2.1.0)
+Requirement already satisfied: strenum<0.5.0,>=0.4.9 in c:\dev\pfa\backend\venv\lib\site-packages (from postgrest<0.14.0,>=0.10.8->supabase==2.0.3->-r requirements.txt (line 22)) (0.4.15)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in c:\dev\pfa\backend\venv\lib\site-packages (from sympy>=1.13.3->torch>=2.2.0->-r requirements.txt (line 9)) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in c:\dev\pfa\backend\venv\lib\site-packages (from jinja2->torch>=2.2.0->-r requirements.txt (line 9)) (3.0.3)
+Requirement already satisfied: pycparser in c:\dev\pfa\backend\venv\lib\site-packages (from cffi>=2.0.0->cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 26)) (2.23)
+
+[notice] A new release of pip is available: 23.2.1 -> 25.3
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+[4/4] Starting backend server...
+Backend will run on http://localhost:8000
+Press CTRL+C to stop
+
+C:\DEV\PFA\backend\venv\Lib\site-packages\transformers\utils\generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+C:\DEV\PFA\backend\venv\Lib\site-packages\transformers\utils\generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device: cpu
+INFO:ai_engine:Loaded sentence transformer model 'sentence-transformers/all-MiniLM-L6-v2' into memory
+C:\DEV\PFA\backend\venv\Lib\site-packages\pydantic\_internal\_fields.py:149: UserWarning: Field "model_loaded" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+INFO:     Will watch for changes in these directories: ['C:\\DEV\\PFA\\backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [19652] using WatchFiles
+C:\DEV\PFA\backend\venv\Lib\site-packages\transformers\utils\generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+C:\DEV\PFA\backend\venv\Lib\site-packages\transformers\utils\generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device: cpu
+INFO:ai_engine:Loaded sentence transformer model 'sentence-transformers/all-MiniLM-L6-v2' into memory
+C:\DEV\PFA\backend\venv\Lib\site-packages\pydantic\_internal\_fields.py:149: UserWarning: Field "model_loaded" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+INFO:     Started server process [19124]
+INFO:     Waiting for application startup.
+INFO:main:Starting up STIBAP AI Engine...
+INFO:httpx:HTTP Request: GET https://zgeamlsavitecqfrtiaa.supabase.co/rest/v1/courses?select=%2A%2C%20category%3Acategories%28%2A%29%2C%20difficulty%3Adifficulty_levels%28%2A%29&is_active=eq.True "HTTP/1.1 400 Bad Request"
+ERROR:main:Failed to refresh AI course index: {'code': 'PGRST200', 'details': "Searched for a foreign key relationship between 'courses' and 'categories' in the schema 'public', but no matches were found.", 'hint': None, 'message': "Could not find a relationship between 'courses' and 'categories' in the schema cache"}
+Traceback (most recent call last):
+  File "C:\DEV\PFA\backend\main.py", line 55, in ensure_ai_course_index
+    courses = await db.get_all_courses()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\DEV\PFA\backend\database.py", line 120, in get_all_courses
+    .execute()
+     ^^^^^^^^^
+  File "C:\DEV\PFA\backend\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 70, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST200', 'details': "Searched for a foreign key relationship between 'courses' and 'categories' in the schema 'public', but no matches were found.", 'hint': None, 'message': "Could not find a relationship between 'courses' and 'categories' in the schema cache"}
+ERROR:main:Error during startup: {'code': 'PGRST200', 'details': "Searched for a foreign key relationship between 'courses' and 'categories' in the schema 'public', but no matches were found.", 'hint': None, 'message': "Could not find a relationship between 'courses' and 'categories' in the schema cache"}
+INFO:     Application startup complete.

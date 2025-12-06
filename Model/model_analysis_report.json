@@ -1,0 +1,36 @@
+{
+  "model_performance": {
+    "accuracy": 0.8617444806369888,
+    "text_model_accuracy": 0.9055374592833876,
+    "training_samples": 11052,
+    "testing_samples": 2763
+  },
+  "feature_analysis": {
+    "total_features": 21,
+    "top_features": [
+      "code_has_function",
+      "code_code_lines",
+      "code_code_length",
+      "code_has_import",
+      "code_has_loop",
+      "contains_code",
+      "contains_question",
+      "text_length",
+      "contains_function",
+      "word_count"
+    ],
+    "most_important_feature": "code_has_function"
+  },
+  "dataset_analysis": {
+    "total_samples": 13815,
+    "learning_samples": 7736,
+    "non_learning_samples": 6079,
+    "learning_percentage": 55.99710459645313
+  },
+  "model_configuration": {
+    "algorithm": "Random Forest",
+    "n_estimators": 100,
+    "max_depth": 10,
+    "class_weight": "balanced"
+  }
+}
