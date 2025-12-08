@@ -8,6 +8,7 @@ const StudentProfilePage = () => {
 
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
+        subject: 'Java', // Default
         studytime: 2,
         failures: 0,
         absences: 0,
@@ -16,6 +17,14 @@ const StudentProfilePage = () => {
         activities: false,
         internet: true
     });
+
+    const subjects = [
+        "Java", "JEE", "DotNet", "Python", "Web", "Mobile", "Cloud", "AI",
+        "Data Science", "DevOps", "Cybersecurity", "Database", "Networks",
+        "Algorithms", "Maths_Adv", "Statistics", "Physics", "Chemistry",
+        "Biology", "Marketing", "Management", "Accounting", "Economics",
+        "Law", "Communication", "English", "French", "History", "Audit"
+    ];
 
     // Styles
     const styles = {
@@ -153,14 +162,8 @@ const StudentProfilePage = () => {
             cursor: 'not-allowed',
             transform: 'none',
         },
-        errorState: {
-            textAlign: 'center',
-            padding: '40px',
-            color: '#ef4444',
-        }
     };
 
-    // If accessed directly without QCM, redirect or handle gracefully
     if (!qcmResult) {
         return (
             <div style={styles.container}>
@@ -182,7 +185,7 @@ const StudentProfilePage = () => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? checked : parseInt(value)
+            [name]: type === 'checkbox' ? checked : (name === 'subject' ? value : parseInt(value))
         }));
     };
 
@@ -207,7 +210,7 @@ const StudentProfilePage = () => {
             if (data.error) {
                 alert('Error: ' + data.error);
             } else {
-                navigate('/results', { state: { prediction: data, qcmResult } });
+                navigate('/results', { state: { prediction: data, qcmResult, subject: formData.subject } });
             }
         } catch (err) {
             console.error(err);
@@ -225,11 +228,28 @@ const StudentProfilePage = () => {
                     <p style={styles.subtitle}>
                         Quiz Score: <span style={styles.scoreBadge}>{qcmResult.grade_20}/20</span>
                         <br />
-                        Help us understand your learning context.
+                        Configuring for Intelligent Tutor...
                     </p>
                 </div>
 
                 <form onSubmit={handleSubmit} style={styles.formContent}>
+
+                    <h3 style={styles.sectionTitle}>Target Subject</h3>
+                    <div style={{ marginBottom: '32px' }}>
+                        <div style={styles.inputGroup}>
+                            <label style={styles.label}>Select the Subject for Analysis</label>
+                            <select
+                                name="subject"
+                                value={formData.subject}
+                                onChange={handleChange}
+                                style={styles.select}
+                            >
+                                {subjects.map(sub => (
+                                    <option key={sub} value={sub}>{sub}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
 
                     <h3 style={styles.sectionTitle}>Academic Habits</h3>
                     <div style={styles.grid}>
@@ -319,7 +339,7 @@ const StudentProfilePage = () => {
                             onMouseOver={(e) => !loading && (e.target.style.transform = 'translateY(-2px)')}
                             onMouseOut={(e) => !loading && (e.target.style.transform = 'none')}
                         >
-                            {loading ? 'Analyzing Profile...' : 'Analyze Performance ✨'}
+                            {loading ? 'Run Intelligent Analysis ✨' : 'Run Intelligent Analysis ✨'}
                         </button>
                     </div>
                 </form>

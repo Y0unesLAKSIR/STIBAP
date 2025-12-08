@@ -14,7 +14,6 @@ const Onboarding = () => {
   // Form data
   const [learningGoals, setLearningGoals] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [timeAvailability, setTimeAvailability] = useState('');
   const [recommendations, setRecommendations] = useState([]);
 
@@ -31,26 +30,26 @@ const Onboarding = () => {
   const loadOptions = async () => {
     setDataLoading(true);
     setDataError('');
-    
+
     try {
       console.log('Fetching difficulties and categories...');
       const [diffData, catData] = await Promise.all([
         apiClient.getDifficulties(),
         apiClient.getMainCategories()
       ]);
-      
+
       console.log('Difficulties response:', diffData);
       console.log('Categories response:', catData);
-      
+
       const diffArray = diffData.data || [];
       const catArray = catData.data || [];
-      
+
       console.log('Setting difficulties:', diffArray);
       console.log('Setting categories:', catArray);
-      
+
       setDifficulties(diffArray);
       setMainCategories(catArray);
-      
+
       if (diffArray.length === 0) {
         setDataError('No difficulty levels found. Make sure the backend is running and database is set up.');
       }
@@ -60,7 +59,7 @@ const Onboarding = () => {
     } catch (err) {
       console.error('Error loading options:', err);
       setDataError(`Failed to load data: ${err.message}. Make sure the backend is running on http://localhost:8000`);
-      
+
       // Set fallback data
       setDifficulties([
         { id: '1', name: 'Beginner', description: 'No prior knowledge required. Start from scratch.', level: 1 },
@@ -87,7 +86,7 @@ const Onboarding = () => {
       setError('Please select your skill level');
       return;
     }
-    
+
     setError('');
     if (step < 3) {
       setStep(step + 1);
@@ -101,15 +100,6 @@ const Onboarding = () => {
     }
   };
 
-  const toggleCategory = (categoryId) => {
-    setSelectedCategories(prev => {
-      if (prev.includes(categoryId)) {
-        return prev.filter(id => id !== categoryId);
-      } else {
-        return [...prev, categoryId];
-      }
-    });
-  };
 
   const handleComplete = async () => {
     setLoading(true);
@@ -124,7 +114,7 @@ const Onboarding = () => {
       };
 
       const response = await apiClient.completeOnboarding(user.id, preferences);
-      
+
       if (response.success) {
         setRecommendations(response.recommendations || []);
         setStep(4); // Show recommendations
@@ -148,8 +138,8 @@ const Onboarding = () => {
       <div className="onboarding-card">
         {/* Progress Bar */}
         <div className="progress-bar">
-          <div 
-            className="progress-fill" 
+          <div
+            className="progress-fill"
             style={{ width: `${getProgressPercentage()}%` }}
           />
         </div>
@@ -159,9 +149,9 @@ const Onboarding = () => {
           <div className="onboarding-step">
             <h1 className="onboarding-title">Welcome! Let's Get Started 🎓</h1>
             <p className="onboarding-subtitle">Tell us what you'd like to learn</p>
-            
+
             {error && <div className="error-message">{error}</div>}
-            
+
             <div className="form-group">
               <label htmlFor="learningGoals">What do you want to learn?</label>
               <textarea
@@ -190,10 +180,10 @@ const Onboarding = () => {
           <div className="onboarding-step">
             <h1 className="onboarding-title">What's Your Current Level? 📊</h1>
             <p className="onboarding-subtitle">This helps us match you with the right courses</p>
-            
+
             {error && <div className="error-message">{error}</div>}
-            {dataError && <div className="error-message" style={{backgroundColor: '#fff3cd', color: '#856404', borderColor: '#ffc107'}}>{dataError}</div>}
-            
+            {dataError && <div className="error-message" style={{ backgroundColor: '#fff3cd', color: '#856404', borderColor: '#ffc107' }}>{dataError}</div>}
+
             {dataLoading ? (
               <div style={{ textAlign: 'center', padding: '40px', color: '#667eea' }}>
                 <p>Loading difficulty levels...</p>
@@ -239,25 +229,25 @@ const Onboarding = () => {
           <div className="onboarding-step">
             <h1 className="onboarding-title">How Much Time Can You Dedicate? ⏰</h1>
             <p className="onboarding-subtitle">This is optional but helps us plan better</p>
-            
+
             {error && <div className="error-message">{error}</div>}
-            
+
             <div className="time-options">
-              <div 
+              <div
                 className={`time-card ${timeAvailability === '30' ? 'selected' : ''}`}
                 onClick={() => setTimeAvailability('30')}
               >
                 <h3>30 min/day</h3>
                 <p>Quick learner</p>
               </div>
-              <div 
+              <div
                 className={`time-card ${timeAvailability === '60' ? 'selected' : ''}`}
                 onClick={() => setTimeAvailability('60')}
               >
                 <h3>1 hour/day</h3>
                 <p>Regular pace</p>
               </div>
-              <div 
+              <div
                 className={`time-card ${timeAvailability === '120' ? 'selected' : ''}`}
                 onClick={() => setTimeAvailability('120')}
               >
@@ -282,7 +272,7 @@ const Onboarding = () => {
           <div className="onboarding-step">
             <h1 className="onboarding-title">Your Personalized Learning Path 🎉</h1>
             <p className="onboarding-subtitle">Based on your preferences, we recommend:</p>
-            
+
             <div className="recommendations-list">
               {recommendations.map((rec, index) => (
                 <div key={index} className="recommendation-card">

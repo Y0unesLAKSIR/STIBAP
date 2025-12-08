@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const PerformancePage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { prediction, qcmResult } = location.state || {};
+    const { prediction, qcmResult, subject } = location.state || {}; // Added subject from state
 
     // Styles
     const styles = {
@@ -124,18 +124,30 @@ const PerformancePage = () => {
             display: 'flex',
             alignItems: 'flex-start',
             marginBottom: '16px',
-            padding: '12px',
-            backgroundColor: '#f9fafb',
-            borderRadius: '8px',
+            padding: '16px',
+            borderRadius: '12px',
+            borderLeftWidth: '6px',
         },
-        feedbackIcon: {
-            marginRight: '12px',
-            fontSize: '1.2rem',
+        // Context-Aware styles
+        warningItem: {
+            backgroundColor: '#fef2f2',
+            borderLeftColor: '#ef4444',
+            color: '#991b1b',
+        },
+        infoItem: {
+            backgroundColor: '#eff6ff',
+            borderLeftColor: '#3b82f6',
+            color: '#1e40af',
+        },
+        successItem: {
+            backgroundColor: '#f0fdf4',
+            borderLeftColor: '#22c55e',
+            color: '#166534',
         },
         feedbackText: {
-            color: '#374151',
             fontSize: '0.95rem',
-            lineHeight: '1.5',
+            lineHeight: '1.6',
+            fontWeight: '500',
         },
         actionSection: {
             textAlign: 'center',
@@ -165,7 +177,6 @@ const PerformancePage = () => {
             boxShadow: '0 10px 15px -3px rgba(79, 70, 229, 0.3)',
             transition: 'transform 0.2s, box-shadow 0.2s',
             textDecoration: 'none',
-            display: 'inline-block',
         },
         secondaryButton: {
             backgroundColor: 'white',
@@ -206,13 +217,32 @@ const PerformancePage = () => {
 
     const isPass = prediction.result === 'Pass';
 
+    const renderFeedbackItem = (tip, index) => {
+        // Handle structured feedback { type, message } or fallback plain string
+        const type = tip.type || (tip.includes('⚠️') || tip.includes('Risk') ? 'warning' : 'info');
+        const message = tip.message || tip;
+
+        let itemStyle = {};
+        if (type === 'warning') itemStyle = styles.warningItem;
+        else if (type === 'success') itemStyle = styles.successItem;
+        else itemStyle = styles.infoItem;
+
+        return (
+            <li key={index} style={{ ...styles.feedbackItem, ...itemStyle }}>
+                <span style={styles.feedbackText}>
+                    {message}
+                </span>
+            </li>
+        );
+    };
+
     return (
         <div style={styles.container}>
             <div style={styles.wrapper}>
                 <div style={styles.header}>
-                    <h1 style={styles.title}>Performance Analysis</h1>
+                    <h1 style={styles.title}>Performance Analysis: {subject || 'General'}</h1>
                     <p style={styles.subtitle}>
-                        AI-Powered Assessment based on your profile and quiz results
+                        AI-Powered Context-Aware Assessment
                     </p>
                 </div>
 
@@ -231,10 +261,10 @@ const PerformancePage = () => {
                     {/* Diagnostic Summary */}
                     <div style={styles.card}>
                         <h3 style={styles.sectionTitle}>
-                            <span style={{ marginRight: '8px' }}>📊</span> Diagnostic Score
+                            <span style={{ marginRight: '8px' }}>📊</span> Input Summary
                         </h3>
                         <div style={styles.scoreRow}>
-                            <span style={styles.scoreLabel}>Math Quiz Result</span>
+                            <span style={styles.scoreLabel}>Diagnostic Score (G1)</span>
                             <span style={styles.scoreValue}>{qcmResult.grade_20}/20</span>
                         </div>
                         <div style={styles.progressBarBg}>
@@ -245,27 +275,20 @@ const PerformancePage = () => {
                                 }}
                             />
                         </div>
-                        <p style={{ marginTop: '16px', fontSize: '0.9rem', color: '#6b7280' }}>
-                            This score (G1) is a key indicator used by our AI model to predict your final performance.
-                        </p>
+                        <hr style={{ margin: '20px 0', borderColor: '#f3f4f6' }} />
+                        <div style={styles.scoreRow}>
+                            <span style={styles.scoreLabel}>Subject</span>
+                            <span style={{ fontWeight: '600', color: '#1f2937' }}>{subject || 'General'}</span>
+                        </div>
                     </div>
 
                     {/* Intelligent Feedback */}
                     <div style={styles.card}>
                         <h3 style={styles.sectionTitle}>
-                            <span style={{ marginRight: '8px' }}>💡</span> Intelligent Feedback
+                            <span style={{ marginRight: '8px' }}>💡</span> Intelligent Feedback Loop
                         </h3>
                         <ul style={styles.feedbackList}>
-                            {prediction.feedback && prediction.feedback.map((tip, index) => (
-                                <li key={index} style={styles.feedbackItem}>
-                                    <span style={styles.feedbackIcon}>
-                                        {tip.includes('✅') ? '✅' : tip.includes('⚠️') ? '⚠️' : '•'}
-                                    </span>
-                                    <span style={styles.feedbackText}>
-                                        {tip.replace(/^[✅⚠️•]\s*/, '')}
-                                    </span>
-                                </li>
-                            ))}
+                            {prediction.feedback && prediction.feedback.map((tip, index) => renderFeedbackItem(tip, index))}
                         </ul>
                     </div>
                 </div>
@@ -288,7 +311,7 @@ const PerformancePage = () => {
                             onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
                             onMouseOut={(e) => e.target.style.transform = 'none'}
                         >
-                            View {prediction.recommendation_type} Courses →
+                            View {prediction.recommendation_type} Resources for {subject} →
                         </button>
                     </div>
                 </div>

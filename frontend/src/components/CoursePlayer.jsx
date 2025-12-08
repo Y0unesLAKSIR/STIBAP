@@ -1,13 +1,9 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSessionToken } from '../services/customAuth';
 import apiClient from '../services/apiClient';
 import ProgressBar from './ProgressBar';
 import './CoursePlayer.css';
-
-// Lazy-load react-markdown and plugins so the app works even if deps aren't installed yet
-let ReactMarkdownMod = null;
-let remarkGfmMod = null;
 
 const CoursePlayer = () => {
   const [mdLib, setMdLib] = useState({ ReactMarkdown: null, remarkGfm: null });
@@ -39,7 +35,7 @@ const CoursePlayer = () => {
     return () => { mounted = false; };
   }, []);
 
-  const modules = outline?.modules || [];
+  const modules = useMemo(() => outline?.modules || [], [outline]);
 
   const allUnits = useMemo(() => {
     const arr = [];

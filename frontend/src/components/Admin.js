@@ -30,20 +30,7 @@ const Admin = () => {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    if (activeTab === 'users') {
-      fetchUsers();
-    }
-    if (activeTab === 'courses') {
-      fetchCourses();
-    }
-    if (activeTab === 'categories') {
-      fetchCategories();
-      fetchAdminCourses();
-    }
-  }, [activeTab]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const sessionToken = getSessionToken();
@@ -61,7 +48,7 @@ const Admin = () => {
         credentials: 'include',
       });
       const data = await response.json();
-      
+
       if (data.success) {
         setUsers(data.users || []);
       } else {
@@ -72,7 +59,8 @@ const Admin = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
 
   const fetchCourses = useCallback(async () => {
     setCoursesLoading(true);
@@ -139,6 +127,19 @@ const Admin = () => {
       setCategoriesLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (activeTab === 'users') {
+      fetchUsers();
+    }
+    if (activeTab === 'courses') {
+      fetchCourses();
+    }
+    if (activeTab === 'categories') {
+      fetchCategories();
+      fetchAdminCourses();
+    }
+  }, [activeTab, fetchUsers, fetchCourses, fetchCategories, fetchAdminCourses]);
 
   const handleAssignCategory = async (courseId) => {
     setLoading(true);

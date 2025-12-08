@@ -6,33 +6,38 @@ import apiClient from '../services/apiClient';
 const Home = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
+    const loadRecommendations = async () => {
+      if (user?.id) {
+        try {
+          const res = await apiClient.getUserRecommendations(user.id);
+          if (res.success) {
+            setRecommendations(res.data);
+          }
+        } catch (error) {
+          console.error('Error loading recommendations:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
     loadRecommendations();
   }, [user]);
 
-  const loadRecommendations = async () => {
-    if (!user) return;
+  const handleSignOut = async () => {
     try {
-      setLoading(true);
-      const response = await apiClient.getUserRecommendations(user.id);
-      if (response.success && response.data) {
-        setRecommendations(response.data.slice(0, 6));
-      }
+      await signOut();
+      navigate('/login');
     } catch (error) {
-      console.error('Error loading recommendations:', error);
-    } finally {
-      setLoading(false);
+      console.error('Failed to logout', error);
     }
   };
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/login');
-  };
-
   // Styles
   const styles = {
     container: {
