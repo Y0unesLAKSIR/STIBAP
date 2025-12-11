@@ -300,9 +300,13 @@ from qcm_service import qcm_service
 # ============================================
 
 @app.get("/api/qcm/questions")
-async def get_qcm_questions(count: int = 10):
-    """Get random QCM questions for diagnostic"""
-    return {"success": True, "data": qcm_service.get_questions(count)}
+async def get_questions(subject: str = "Maths_Adv", count: int = 10):
+    """
+    Get a list of QCM questions for a specific subject.
+    Default subject is 'Maths_Adv'.
+    """
+    questions = qcm_service.get_questions(subject=subject, count=count)
+    return {"success": True, "data": questions}
 
 @app.post("/api/qcm/submit")
 async def submit_qcm(answers: dict):

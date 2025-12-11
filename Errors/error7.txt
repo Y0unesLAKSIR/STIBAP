@@ -1,0 +1,233 @@
+Compiled with problems:
+ERROR
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: C:\DEV\PFA\frontend\src\components\Onboarding.js: Identifier 'selectedDifficulty' has already been declared. (17:9)
+
+  15 |   const [learningGoals, setLearningGoals] = useState('');
+  16 |   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+> 17 |   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+     |          ^
+  18 |   const [timeAvailability, setTimeAvailability] = useState('');
+  19 |   const [recommendations, setRecommendations] = useState([]);
+  20 |
+    at constructor (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:367:19)
+    at FlowParserMixin.raise (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:6624:19)
+    at FlowScopeHandler.checkRedeclarationInScope (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1646:19)
+    at FlowScopeHandler.declareName (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1612:12)
+    at FlowScopeHandler.declareName (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1713:11)
+    at FlowParserMixin.declareNameFromIdentifier (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7594:16)
+    at FlowParserMixin.checkIdentifier (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7590:12)
+    at FlowParserMixin.checkLVal (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7527:12)
+    at FlowParserMixin.checkLVal (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7567:16)
+    at FlowParserMixin.parseVarId (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13488:10)
+    at FlowParserMixin.parseVarId (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3503:11)
+    at FlowParserMixin.parseVar (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13459:12)
+    at FlowParserMixin.parseVarStatement (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13306:10)
+    at FlowParserMixin.parseStatementContent (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12927:23)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12843:17)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2945:24)
+    at FlowParserMixin.parseStatementListItem (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12823:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13392:61)
+    at FlowParserMixin.parseBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13385:10)
+    at FlowParserMixin.parseBlock (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13373:10)
+    at FlowParserMixin.parseFunctionBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12174:24)
+    at C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2919:63
+    at FlowParserMixin.forwardNoArrowParamsConversionAt (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3095:16)
+    at FlowParserMixin.parseFunctionBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2919:12)
+    at FlowParserMixin.parseArrowExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12149:10)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11759:12)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3620:18)
+    at FlowParserMixin.parseExprAtom (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11395:23)
+    at FlowParserMixin.parseExprAtom (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:4793:20)
+    at FlowParserMixin.parseExprSubscripts (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11145:23)
+    at FlowParserMixin.parseUpdate (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11130:21)
+    at FlowParserMixin.parseMaybeUnary (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11110:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10963:61)
+    at FlowParserMixin.parseExprOps (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10968:23)
+    at FlowParserMixin.parseMaybeConditional (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10945:23)
+    at FlowParserMixin.parseMaybeAssign (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10895:21)
+    at FlowParserMixin.parseMaybeAssign (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3578:18)
+    at C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10864:39
+    at FlowParserMixin.allowInAnd (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12495:16)
+    at FlowParserMixin.parseMaybeAssignAllowIn (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10864:17)
+    at FlowParserMixin.parseVar (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13460:91)
+    at FlowParserMixin.parseVarStatement (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13306:10)
+    at FlowParserMixin.parseStatementContent (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12927:23)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12843:17)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2945:24)
+    at FlowParserMixin.parseModuleItem (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12820:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13392:36)
+    at FlowParserMixin.parseBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13385:10)
+    at FlowParserMixin.parseProgram (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12698:10)
+    at FlowParserMixin.parseTopLevel (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12688:25)
+./src/components/Onboarding.js@http://localhost:3001/static/js/bundle.js:65446:7
+options.factory@http://localhost:3001/static/js/bundle.js:70985:30
+__webpack_require__@http://localhost:3001/static/js/bundle.js:70341:32
+fn@http://localhost:3001/static/js/bundle.js:70601:21
+hotRequire@http://localhost:3001/static/js/bundle.js:70968:61
+./src/App.js@http://localhost:3001/static/js/bundle.js:61256:99
+options.factory@http://localhost:3001/static/js/bundle.js:70985:30
+__webpack_require__@http://localhost:3001/static/js/bundle.js:70341:32
+fn@http://localhost:3001/static/js/bundle.js:70601:21
+hotRequire@http://localhost:3001/static/js/bundle.js:70968:61
+./src/index.js@http://localhost:3001/static/js/bundle.js:67406:81
+options.factory@http://localhost:3001/static/js/bundle.js:70985:30
+__webpack_require__@http://localhost:3001/static/js/bundle.js:70341:32
+@http://localhost:3001/static/js/bundle.js:71589:56
+@http://localhost:3001/static/js/bundle.js:71591:12
+ERROR in ./src/components/Onboarding.js
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: C:\DEV\PFA\frontend\src\components\Onboarding.js: Identifier 'selectedDifficulty' has already been declared. (17:9)
+
+  15 |   const [learningGoals, setLearningGoals] = useState('');
+  16 |   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+> 17 |   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+     |          ^
+  18 |   const [timeAvailability, setTimeAvailability] = useState('');
+  19 |   const [recommendations, setRecommendations] = useState([]);
+  20 |
+    at constructor (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:367:19)
+    at FlowParserMixin.raise (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:6624:19)
+    at FlowScopeHandler.checkRedeclarationInScope (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1646:19)
+    at FlowScopeHandler.declareName (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1612:12)
+    at FlowScopeHandler.declareName (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1713:11)
+    at FlowParserMixin.declareNameFromIdentifier (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7594:16)
+    at FlowParserMixin.checkIdentifier (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7590:12)
+    at FlowParserMixin.checkLVal (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7527:12)
+    at FlowParserMixin.checkLVal (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7567:16)
+    at FlowParserMixin.parseVarId (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13488:10)
+    at FlowParserMixin.parseVarId (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3503:11)
+    at FlowParserMixin.parseVar (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13459:12)
+    at FlowParserMixin.parseVarStatement (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13306:10)
+    at FlowParserMixin.parseStatementContent (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12927:23)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12843:17)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2945:24)
+    at FlowParserMixin.parseStatementListItem (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12823:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13392:61)
+    at FlowParserMixin.parseBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13385:10)
+    at FlowParserMixin.parseBlock (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13373:10)
+    at FlowParserMixin.parseFunctionBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12174:24)
+    at C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2919:63
+    at FlowParserMixin.forwardNoArrowParamsConversionAt (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3095:16)
+    at FlowParserMixin.parseFunctionBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2919:12)
+    at FlowParserMixin.parseArrowExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12149:10)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11759:12)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3620:18)
+    at FlowParserMixin.parseExprAtom (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11395:23)
+    at FlowParserMixin.parseExprAtom (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:4793:20)
+    at FlowParserMixin.parseExprSubscripts (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11145:23)
+    at FlowParserMixin.parseUpdate (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11130:21)
+    at FlowParserMixin.parseMaybeUnary (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11110:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10963:61)
+    at FlowParserMixin.parseExprOps (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10968:23)
+    at FlowParserMixin.parseMaybeConditional (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10945:23)
+    at FlowParserMixin.parseMaybeAssign (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10895:21)
+    at FlowParserMixin.parseMaybeAssign (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3578:18)
+    at C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10864:39
+    at FlowParserMixin.allowInAnd (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12495:16)
+    at FlowParserMixin.parseMaybeAssignAllowIn (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10864:17)
+    at FlowParserMixin.parseVar (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13460:91)
+    at FlowParserMixin.parseVarStatement (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13306:10)
+    at FlowParserMixin.parseStatementContent (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12927:23)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12843:17)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2945:24)
+    at FlowParserMixin.parseModuleItem (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12820:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13392:36)
+    at FlowParserMixin.parseBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13385:10)
+    at FlowParserMixin.parseProgram (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12698:10)
+    at FlowParserMixin.parseTopLevel (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12688:25)
+ERROR
+[eslint] 
+src\components\Onboarding.js
+  Line 17:9:  Parsing error: Identifier 'selectedDifficulty' has already been declared. (17:9)
+
+console : 
+PS C:\DEV\PFA\frontend> npm start
+
+> stibap-frontend@0.1.0 start
+> react-scripts start
+√ Something is already running on port 3000.
+
+Would you like to run the app on another port instead? ... yes
+(node:40092) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:40092) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+Failed to compile.
+
+SyntaxError: C:\DEV\PFA\frontend\src\components\Onboarding.js: Identifier 'selectedDifficulty' has already been declared. (17:9)
+  15 |   const [learningGoals, setLearningGoals] = useState('');
+  16 |   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+> 17 |   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+     |          ^
+  18 |   const [timeAvailability, setTimeAvailability] = useState('');
+  19 |   const [recommendations, setRecommendations] = useState([]);
+  20 |
+ERROR in ./src/components/Onboarding.js
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: C:\DEV\PFA\frontend\src\components\Onboarding.js: Identifier 'selectedDifficulty' has already been declared. (17:9)
+
+  15 |   const [learningGoals, setLearningGoals] = useState('');
+  16 |   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+> 17 |   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+     |          ^
+  18 |   const [timeAvailability, setTimeAvailability] = useState('');
+  19 |   const [recommendations, setRecommendations] = useState([]);
+  20 |
+    at constructor (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:367:19)
+    at FlowParserMixin.raise (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:6624:19)
+    at FlowScopeHandler.checkRedeclarationInScope (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1646:19)
+    at FlowScopeHandler.declareName (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1612:12)
+    at FlowScopeHandler.declareName (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:1713:11)
+    at FlowParserMixin.declareNameFromIdentifier (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7594:16)
+    at FlowParserMixin.checkIdentifier (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7590:12)
+    at FlowParserMixin.checkLVal (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7527:12)
+    at FlowParserMixin.checkLVal (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:7567:16)
+    at FlowParserMixin.parseVarId (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13488:10)
+    at FlowParserMixin.parseVarId (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3503:11)
+    at FlowParserMixin.parseVar (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13459:12)
+    at FlowParserMixin.parseVarStatement (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13306:10)
+    at FlowParserMixin.parseStatementContent (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12927:23)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12843:17)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2945:24)
+    at FlowParserMixin.parseStatementListItem (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12823:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13392:61)
+    at FlowParserMixin.parseBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13385:10)
+    at FlowParserMixin.parseBlock (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13373:10)
+    at FlowParserMixin.parseFunctionBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12174:24)
+    at C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2919:63
+    at FlowParserMixin.forwardNoArrowParamsConversionAt (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3095:16)
+    at FlowParserMixin.parseFunctionBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2919:12)
+    at FlowParserMixin.parseArrowExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12149:10)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11759:12)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3620:18)
+    at FlowParserMixin.parseExprAtom (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11395:23)
+    at FlowParserMixin.parseExprAtom (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:4793:20)
+    at FlowParserMixin.parseExprSubscripts (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11145:23)
+    at FlowParserMixin.parseUpdate (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11130:21)
+    at FlowParserMixin.parseMaybeUnary (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:11110:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10963:61)
+    at FlowParserMixin.parseExprOps (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10968:23)
+    at FlowParserMixin.parseMaybeConditional (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10945:23)
+    at FlowParserMixin.parseMaybeAssign (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10895:21)
+    at FlowParserMixin.parseMaybeAssign (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:3578:18)
+    at C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10864:39
+    at FlowParserMixin.allowInAnd (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12495:16)
+    at FlowParserMixin.parseMaybeAssignAllowIn (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:10864:17)
+    at FlowParserMixin.parseVar (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13460:91)
+    at FlowParserMixin.parseVarStatement (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13306:10)
+    at FlowParserMixin.parseStatementContent (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12927:23)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12843:17)
+    at FlowParserMixin.parseStatementLike (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:2945:24)
+    at FlowParserMixin.parseModuleItem (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12820:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13392:36)
+    at FlowParserMixin.parseBlockBody (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:13385:10)
+    at FlowParserMixin.parseProgram (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12698:10)
+    at FlowParserMixin.parseTopLevel (C:\DEV\PFA\frontend\node_modules\@babel\parser\lib\index.js:12688:25)
+
+ERROR in [eslint]
+src\components\Onboarding.js
+  Line 17:9:  Parsing error: Identifier 'selectedDifficulty' has already been declared. (17:9)
+
+webpack compiled with 2 errors
+PS C:\DEV\PFA\frontend>

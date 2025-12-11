@@ -48,9 +48,9 @@ const PerformancePage = () => {
         },
         resultCard: {
             gridColumn: '1 / -1',
-            background: prediction?.result === 'Pass'
-                ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' // Green gradient
-                : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', // Red gradient
+            background: prediction?.status === 'success'
+                ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' // Green gradient for Success
+                : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', // Red gradient for Risk
             color: 'white',
             textAlign: 'center',
             padding: '48px',
@@ -115,38 +115,16 @@ const PerformancePage = () => {
             borderRadius: '6px',
             transition: 'width 1s ease-out',
         },
-        feedbackList: {
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-        },
-        feedbackItem: {
-            display: 'flex',
-            alignItems: 'flex-start',
-            marginBottom: '16px',
-            padding: '16px',
-            borderRadius: '12px',
-            borderLeftWidth: '6px',
-        },
-        // Context-Aware styles
-        warningItem: {
-            backgroundColor: '#fef2f2',
-            borderLeftColor: '#ef4444',
-            color: '#991b1b',
-        },
-        infoItem: {
-            backgroundColor: '#eff6ff',
-            borderLeftColor: '#3b82f6',
-            color: '#1e40af',
-        },
-        successItem: {
-            backgroundColor: '#f0fdf4',
-            borderLeftColor: '#22c55e',
-            color: '#166534',
+        feedbackCard: {
+            gridColumn: '1 / -1',
+            backgroundColor: prediction?.status === 'success' ? '#f0fdf4' : '#fef2f2',
+            borderLeft: `6px solid ${prediction?.status === 'success' ? '#22c55e' : '#ef4444'}`,
+            padding: '24px',
         },
         feedbackText: {
-            fontSize: '0.95rem',
+            fontSize: '1.1rem',
             lineHeight: '1.6',
+            color: prediction?.status === 'success' ? '#166534' : '#991b1b',
             fontWeight: '500',
         },
         actionSection: {
@@ -215,27 +193,6 @@ const PerformancePage = () => {
         );
     }
 
-    const isPass = prediction.result === 'Pass';
-
-    const renderFeedbackItem = (tip, index) => {
-        // Handle structured feedback { type, message } or fallback plain string
-        const type = tip.type || (tip.includes('⚠️') || tip.includes('Risk') ? 'warning' : 'info');
-        const message = tip.message || tip;
-
-        let itemStyle = {};
-        if (type === 'warning') itemStyle = styles.warningItem;
-        else if (type === 'success') itemStyle = styles.successItem;
-        else itemStyle = styles.infoItem;
-
-        return (
-            <li key={index} style={{ ...styles.feedbackItem, ...itemStyle }}>
-                <span style={styles.feedbackText}>
-                    {message}
-                </span>
-            </li>
-        );
-    };
-
     return (
         <div style={styles.container}>
             <div style={styles.wrapper}>
@@ -251,10 +208,10 @@ const PerformancePage = () => {
                     <div style={{ ...styles.card, ...styles.resultCard }}>
                         <div style={styles.resultTitle}>Predicted Outcome</div>
                         <div style={styles.resultStatus}>
-                            {isPass ? 'Likely to Pass' : 'At Risk'}
+                            {prediction.message}
                         </div>
                         <div style={styles.confidence}>
-                            Confidence Score: {(prediction.confidence * 100).toFixed(1)}%
+                            Confidence Score: {(prediction.probability * 100).toFixed(1)}%
                         </div>
                     </div>
 
@@ -282,14 +239,15 @@ const PerformancePage = () => {
                         </div>
                     </div>
 
-                    {/* Intelligent Feedback */}
-                    <div style={styles.card}>
-                        <h3 style={styles.sectionTitle}>
-                            <span style={{ marginRight: '8px' }}>💡</span> Intelligent Feedback Loop
+                    {/* Detailed Feedback Card (New JSON field) */}
+                    <div style={{ ...styles.card, ...styles.feedbackCard }}>
+                        <h3 style={{ ...styles.sectionTitle, marginTop: 0, color: 'inherit' }}>
+                            <span style={{ marginRight: '8px' }}>💡</span>
+                            {prediction.status === 'success' ? 'Pedagogical Analysis' : 'Corrective Action Plan'}
                         </h3>
-                        <ul style={styles.feedbackList}>
-                            {prediction.feedback && prediction.feedback.map((tip, index) => renderFeedbackItem(tip, index))}
-                        </ul>
+                        <p style={styles.feedbackText}>
+                            {prediction.detailed_feedback}
+                        </p>
                     </div>
                 </div>
 
@@ -311,7 +269,7 @@ const PerformancePage = () => {
                             onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
                             onMouseOut={(e) => e.target.style.transform = 'none'}
                         >
-                            View {prediction.recommendation_type} Resources for {subject} →
+                            View Resources for {subject} →
                         </button>
                     </div>
                 </div>

@@ -15,6 +15,7 @@ import MathDiagnosticPage from './pages/MathDiagnosticPage';
 import StudentProfilePage from './pages/StudentProfilePage';
 import LandingPage from './pages/LandingPage';
 import SubjectSelectionPage from './pages/SubjectSelectionPage';
+import DiagnosticPage from './pages/DiagnosticPage';
 
 function App() {
   return (
@@ -79,6 +80,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MathDiagnosticPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/diagnostic/:subject"
+            element={
+              <ProtectedRoute>
+                <DiagnosticPage />
               </ProtectedRoute>
             }
           />
