@@ -8,7 +8,7 @@ const StudentProfilePage = () => {
 
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        subject: 'Java', // Default
+        subject: location.state?.subject || 'Java', // Use passed subject or default to Java
         studytime: 2,
         failures: 0,
         absences: 0,

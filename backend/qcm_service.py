@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Optional
 import random
+import httpx
 
 class Question:
     def __init__(self, id: int, text: str, options: List[str], correct_index: int, category: str):
@@ -97,14 +98,56 @@ class QCMService:
             Question(994, "Byte size?", ["4 bits", "8 bits", "16 bits", "32 bits"], 1, "Hardware"),
             Question(995, "RAM is...", ["Volatile", "Non-Volatile", "Permanent", "Slow"], 0, "Hardware"),
         ]
-
-    def get_questions(self, subject: str = "Maths_Adv", count: int = 5) -> List[Dict[str, Any]]:
-        """Return a random selection of questions for a specific subject."""
         
-        # Normalize subject handling to match keys if needed, or use specific key
+        # Cache for dynamically generated AI questions so we can grade them later
+        self.dynamic_cache: List[Question] = []
+
+    async def get_questions(self, subject: str = "Maths_Adv", count: int = 5) -> List[Dict[str, Any]]:
+        """
+        Return a random selection of questions for a specific subject.
+        Attempts to fetch from AI Microservice first. Falls back to local DB.
+        """
+        
+        # 1. Try AI Microservice
+        try:
+            async with httpx.AsyncClient() as client:
+                # Call Spring Boot Service (Phase 1)
+                # Timeout set to 20s to be safe
+                response = await client.get(
+                    f"http://localhost:8081/api/generate?subject={subject}", 
+                    timeout=20.0
+                )
+                
+                if response.status_code == 200:
+                    ai_questions_data = response.json()
+                    if ai_questions_data:
+                        # Convert JSON to Question objects and cache them
+                        new_questions = []
+                        for q_data in ai_questions_data:
+                            # Map JSON fields to Question Object (ensure keys match DTO)
+                            # DTO: id, text, options, correctIndex, category
+                            q_obj = Question(
+                                id=q_data.get("id", random.randint(1000, 9999)),
+                                text=q_data["text"],
+                                options=q_data["options"],
+                                correct_index=q_data["correctIndex"],
+                                category=q_data.get("category", subject)
+                            )
+                            new_questions.append(q_obj)
+                        
+                        # Add to dynamic cache for grading later
+                        self.dynamic_cache.extend(new_questions)
+                        
+                        # Use these questions for the response
+                        # We limit to 'count' here if AI returns more
+                        return ai_questions_data[:count]
+                        
+        except Exception as e:
+            print(f"AI Microservice unavailable for {subject}: {e}. Using local fallback.")
+
+        # 2. Fallback to Local Dict
         target_questions = self.questions_db.get(subject, self.fallback_questions)
         
-        # If we have specific questions but fewer than requested, return all of them
         available_count = len(target_questions)
         select_count = min(count, available_count)
         
@@ -135,6 +178,9 @@ class QCMService:
         for q_list in self.questions_db.values():
             all_questions.extend(q_list)
         all_questions.extend(self.fallback_questions)
+        
+        # IMPORTANT: Include dynamic AI questions in the lookup
+        all_questions.extend(self.dynamic_cache)
 
         for q_id, selected_idx in answers.items():
             question = next((q for q in all_questions if q.id == int(q_id)), None)

@@ -24,7 +24,8 @@ const DiagnosticPage = () => {
             // Fetch questions for the specific subject
             // The backend defaults to Maths_Adv if subject is missing or invalid logic, 
             // but we send the exact param from URL.
-            const response = await fetch(`http://localhost:8000/api/qcm/questions?subject=${subject}&count=5`);
+            // Requesting 15 questions (AI Generation)
+            const response = await fetch(`http://localhost:8000/api/qcm/questions?subject=${subject}&count=15`);
             const data = await response.json();
             if (data.success) {
                 setQuestions(data.data);
@@ -194,7 +195,10 @@ const DiagnosticPage = () => {
         <div style={styles.container}>
             <div style={styles.loading}>
                 <div style={{ marginBottom: '20px', fontSize: '3rem' }}>🔮</div>
-                Isolating Knowledge Vectors for {subjectTitle}...
+                <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Isolating Knowledge Vectors for {subjectTitle}...</div>
+                <div style={{ fontSize: '0.9rem', color: '#6b7280', maxWidth: '400px', margin: '0 auto' }}>
+                    Generating custom AI assessment. This takes ~5-10 seconds. Please wait...
+                </div>
             </div>
         </div>
     );

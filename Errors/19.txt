@@ -1,0 +1,397 @@
+Law Diagnostic
+
+AI-Powered Competency Assessment
+1. General Question 14 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+2. General Question 15 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+3. General Question 8 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+4. General Question 7 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+5. General Question 11 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+6. General Question 9 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+7. General Question 12 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+8. General Question 1 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+9. General Question 2 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+10. General Question 13 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+11. General Question 3 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+12. General Question 10 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+13. General Question 4 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+14. General Question 6 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+15. General Question 5 about LawGeneral Knowledge
+Answer A
+Answer B
+Answer C
+Answer D
+
+the Marketing subject worked well but the Law subject failed to generate questions properly : 
+Marketing Diagnostic
+
+AI-Powered Competency Assessment
+1. What is the 4P model in Marketing?Marketing Basics
+Product, Price, Place, Promotion
+People, Process, Physical Evidence, Partners
+Planning, Performance, Profit, Power
+Product, Price, Planning, Promotion
+2. The 'Place' in the 4Ps refers to:Marketing Mix
+Distribution channels
+The physical store only
+The location of the headquarters
+Where the product is manufactured
+3. What does SEO stand for?Digital Marketing
+Search Engine Optimization
+Sales Engine Operation
+Social Engagement Organization
+Site External Optimization
+4. Which tool is used for email marketing automation?Digital Tools
+Mailchimp
+Photoshop
+Excel
+PowerPoint
+5. What is 'Content Marketing'?Digital Marketing
+Creating valuable content to attract an audience
+Sending spam emails
+Placing ads on TV
+Cold calling customers
+6. SWOT analysis stands for:Strategic Planning
+Strengths, Weaknesses, Opportunities, Threats
+Sales, Wealth, Operations, Targets
+Strategy, Work, Organization, Time
+Systems, Wireless, Online, Technology
+7. What is 'Brand Equity'?Branding
+The value added to a product by its brand name
+The stock price of a company
+The total assets of a marketing team
+The cost of a logo design
+8. What is a 'Target Market'?Targeting
+A specific group of consumers a business aims to serve
+The total population of a country
+A list of competitors
+The physical location of a store
+9. Which of the following is a 'Psychographic' segmentation variable?Segmentation
+Age
+Lifestyle
+Gender
+Income
+10. Which pricing strategy involves setting a high initial price?Pricing Strategy
+Skimming
+Penetration
+Bundling
+Cost-plus
+11. ROI in marketing means:Metrics
+Return on Investment
+Reach on Internet
+Rate of Interest
+Risk of Inflation
+12. In the AIDA model, what does the first 'A' stand for?Consumer Behavior
+Action
+Awareness (or Attention)
+Affinity
+Approval
+13. What is NOT a stage in the Product Life Cycle?Product Management
+Introduction
+Growth
+Maturity
+Inflation
+14. Which concept focuses on long-term customer relationships?Marketing Strategy
+Transactional Marketing
+Relationship Marketing
+Direct Sales
+Mass Marketing
+15. What is 'Social Proof'?Consumer Psychology
+Influence exerted by others on our behavior
+A contract signed by partners
+Proof of identity on social media
+An algorithm for ranking posts
+
+can you do all of that for all subjects ? every single subject should have 15 questions generated for them specifically not just marke  : 
+bakcend console : 
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:ai_engine:Original prompt: 'sexiology'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  6.60it/s]
+INFO:ai_engine:============================================================
+INFO:ai_engine:Course Similarity Scores:
+INFO:ai_engine:  [0.147] Advanced Python: OOP and Design Patterns
+INFO:ai_engine:  [0.146] Calculus I: Limits and Derivatives
+INFO:ai_engine:  [0.095] Introduction to Quantum Mechanics
+INFO:ai_engine:  [0.081] Python Basics for Beginners
+INFO:ai_engine:  [0.062] Python Fundamentals
+INFO:ai_engine:  [0.049] Linear Algebra for Machine Learning
+INFO:ai_engine:  [0.014] JavaScript Fundamentals
+INFO:ai_engine:============================================================
+INFO:ai_engine:Stopped at score 0.147 (below minimum 0.3)
+INFO:ai_engine:✓ Generated 0 recommendations (min_score: 0.3)
+INFO:     127.0.0.1:51477 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/recommendations?top_k=10 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:ai_engine:Original prompt: 'sexiology'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 90.31it/s]
+INFO:ai_engine:============================================================
+INFO:ai_engine:Course Similarity Scores:
+INFO:ai_engine:  [0.147] Advanced Python: OOP and Design Patterns
+INFO:ai_engine:  [0.146] Calculus I: Limits and Derivatives
+INFO:ai_engine:  [0.095] Introduction to Quantum Mechanics
+INFO:ai_engine:  [0.081] Python Basics for Beginners
+INFO:ai_engine:  [0.062] Python Fundamentals
+INFO:ai_engine:  [0.049] Linear Algebra for Machine Learning
+INFO:ai_engine:  [0.014] JavaScript Fundamentals
+INFO:ai_engine:============================================================
+INFO:ai_engine:Stopped at score 0.147 (below minimum 0.3)
+INFO:ai_engine:✓ Generated 0 recommendations (min_score: 0.3)
+INFO:     127.0.0.1:51477 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/recommendations?top_k=10 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Marketing "HTTP/1.1 200 "
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Marketing "HTTP/1.1 200 "
+INFO:     127.0.0.1:51484 - "GET /api/qcm/questions?subject=Marketing&count=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51481 - "GET /api/qcm/questions?subject=Marketing&count=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63920 - "OPTIONS /api/qcm/submit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63920 - "POST /api/qcm/submit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63925 - "OPTIONS /api/performance/predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63925 - "POST /api/performance/predict HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:63927 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/preferences HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:63927 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/preferences HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:ai_engine:Original prompt: 'sexiology'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 82.77it/s]
+INFO:ai_engine:============================================================
+INFO:ai_engine:Course Similarity Scores:
+INFO:ai_engine:  [0.147] Advanced Python: OOP and Design Patterns
+INFO:ai_engine:  [0.146] Calculus I: Limits and Derivatives
+INFO:ai_engine:  [0.095] Introduction to Quantum Mechanics
+INFO:ai_engine:  [0.081] Python Basics for Beginners
+INFO:ai_engine:  [0.062] Python Fundamentals
+INFO:ai_engine:  [0.049] Linear Algebra for Machine Learning
+INFO:ai_engine:  [0.014] JavaScript Fundamentals
+INFO:ai_engine:============================================================
+INFO:ai_engine:Stopped at score 0.147 (below minimum 0.3)
+INFO:ai_engine:✓ Generated 0 recommendations (min_score: 0.3)
+INFO:     127.0.0.1:63929 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/recommendations?top_k=10 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:ai_engine:Original prompt: 'sexiology'
+Batches: 100%|██████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 132.89it/s]
+INFO:ai_engine:============================================================
+INFO:ai_engine:Course Similarity Scores:
+INFO:ai_engine:  [0.147] Advanced Python: OOP and Design Patterns
+INFO:ai_engine:  [0.146] Calculus I: Limits and Derivatives
+INFO:ai_engine:  [0.095] Introduction to Quantum Mechanics
+INFO:ai_engine:  [0.081] Python Basics for Beginners
+INFO:ai_engine:  [0.062] Python Fundamentals
+INFO:ai_engine:  [0.049] Linear Algebra for Machine Learning
+INFO:ai_engine:  [0.014] JavaScript Fundamentals
+INFO:ai_engine:============================================================
+INFO:ai_engine:Stopped at score 0.147 (below minimum 0.3)
+INFO:ai_engine:✓ Generated 0 recommendations (min_score: 0.3)
+INFO:     127.0.0.1:63927 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/recommendations?top_k=10 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Law "HTTP/1.1 200 "
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Law "HTTP/1.1 200 "
+INFO:     127.0.0.1:63927 - "GET /api/qcm/questions?subject=Law&count=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63929 - "GET /api/qcm/questions?subject=Law&count=15 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Communication "HTTP/1.1 200 "
+INFO:     127.0.0.1:49612 - "GET /api/qcm/questions?subject=Communication&count=15 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Communication "HTTP/1.1 200 "
+INFO:     127.0.0.1:49612 - "GET /api/qcm/questions?subject=Communication&count=15 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Communication "HTTP/1.1 200 "
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Communication "HTTP/1.1 200 "
+INFO:     127.0.0.1:49624 - "GET /api/qcm/questions?subject=Communication&count=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49623 - "GET /api/qcm/questions?subject=Communication&count=15 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:50347 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/preferences HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:50347 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/preferences HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:ai_engine:Original prompt: 'sexiology'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 79.64it/s]
+INFO:ai_engine:============================================================
+INFO:ai_engine:Course Similarity Scores:
+INFO:ai_engine:  [0.147] Advanced Python: OOP and Design Patterns
+INFO:ai_engine:  [0.146] Calculus I: Limits and Derivatives
+INFO:ai_engine:  [0.095] Introduction to Quantum Mechanics
+INFO:ai_engine:  [0.081] Python Basics for Beginners
+INFO:ai_engine:  [0.062] Python Fundamentals
+INFO:ai_engine:  [0.049] Linear Algebra for Machine Learning
+INFO:ai_engine:  [0.014] JavaScript Fundamentals
+INFO:ai_engine:============================================================
+INFO:ai_engine:Stopped at score 0.147 (below minimum 0.3)
+INFO:ai_engine:✓ Generated 0 recommendations (min_score: 0.3)
+INFO:     127.0.0.1:50347 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/recommendations?top_k=10 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://ibrcdwgyocvqkogxhnqh.supabase.co/rest/v1/user_preferences?select=%2A&user_id=eq.7d1ff565-edf2-4bd3-abb4-cb841b598509 "HTTP/1.1 200 OK"
+INFO:ai_engine:Original prompt: 'sexiology'
+Batches: 100%|██████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 108.68it/s]
+INFO:ai_engine:============================================================
+INFO:ai_engine:Course Similarity Scores:
+INFO:ai_engine:  [0.147] Advanced Python: OOP and Design Patterns
+INFO:ai_engine:  [0.146] Calculus I: Limits and Derivatives
+INFO:ai_engine:  [0.095] Introduction to Quantum Mechanics
+INFO:ai_engine:  [0.081] Python Basics for Beginners
+INFO:ai_engine:  [0.062] Python Fundamentals
+INFO:ai_engine:  [0.049] Linear Algebra for Machine Learning
+INFO:ai_engine:  [0.014] JavaScript Fundamentals
+INFO:ai_engine:============================================================
+INFO:ai_engine:Stopped at score 0.147 (below minimum 0.3)
+INFO:ai_engine:✓ Generated 0 recommendations (min_score: 0.3)
+INFO:     127.0.0.1:50347 - "GET /api/users/7d1ff565-edf2-4bd3-abb4-cb841b598509/recommendations?top_k=10 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Law "HTTP/1.1 200 "
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Law "HTTP/1.1 200 "
+INFO:     127.0.0.1:51265 - "GET /api/qcm/questions?subject=Law&count=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51264 - "GET /api/qcm/questions?subject=Law&count=15 HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Marketing "HTTP/1.1 200 "
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Marketing "HTTP/1.1 200 "
+INFO:     127.0.0.1:56431 - "GET /api/qcm/questions?subject=Marketing&count=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56430 - "GET /api/qcm/questions?subject=Marketing&count=15 HTTP/1.1" 200 OK
+
+qcmAiGenerator console : 
+PS C:\DEV\PFA\qcmAiGenerator\ai-question-generator> mvn spring-boot:run
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -------------------< ma.emsi:ai-question-generator >--------------------
+[INFO] Building ai-question-generator 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] >>> spring-boot:3.3.5:run (default-cli) > test-compile @ ai-question-generator >>>
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ ai-question-generator ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ ai-question-generator ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ ai-question-generator ---
+[INFO] skip non existing resourceDirectory C:\DEV\PFA\qcmAiGenerator\ai-question-generator\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ ai-question-generator ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] <<< spring-boot:3.3.5:run (default-cli) < test-compile @ ai-question-generator <<<
+[INFO]
+[INFO]
+[INFO] --- spring-boot:3.3.5:run (default-cli) @ ai-question-generator ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2025-12-17T14:14:33.530+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] m.e.a.AiQuestionGeneratorApplication     : Starting AiQuestionGeneratorApplication using Java 21.0.1 with PID 42244 (C:\DEV\PFA\qcmAiGenerator\ai-question-generator\target\classes started by Youssef in C:\DEV\PFA\qcmAiGenerator\ai-question-generator)
+2025-12-17T14:14:33.536+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] m.e.a.AiQuestionGeneratorApplication     : No active profile set, falling back to 1 default profile: "default"
+2025-12-17T14:14:33.592+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-17T14:14:33.593+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-17T14:14:34.740+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-17T14:14:34.780+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 27 ms. Found 0 JPA repository interfaces.
+2025-12-17T14:14:36.295+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-12-17T14:14:36.321+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-17T14:14:36.323+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2025-12-17T14:14:36.444+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-17T14:14:36.446+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2852 ms
+2025-12-17T14:14:36.507+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-17T14:14:36.979+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:2e308150-90fa-480f-9e4a-ef99e8b26fa4 user=SA
+2025-12-17T14:14:36.982+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-12-17T14:14:37.000+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:2e308150-90fa-480f-9e4a-ef99e8b26fa4'
+2025-12-17T14:14:37.242+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-17T14:14:37.348+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-12-17T14:14:37.405+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-12-17T14:14:37.881+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-17T14:14:38.535+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-17T14:14:38.542+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-17T14:14:38.775+01:00  WARN 42244 --- [ai-question-generator] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-17T14:14:39.231+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-12-17T14:14:39.324+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-12-17T14:14:39.337+01:00  INFO 42244 --- [ai-question-generator] [  restartedMain] m.e.a.AiQuestionGeneratorApplication     : Started AiQuestionGeneratorApplication in 6.169 seconds (process running for 6.627)
+2025-12-17T14:20:46.608+01:00  INFO 42244 --- [ai-question-generator] [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-17T14:20:46.608+01:00  INFO 42244 --- [ai-question-generator] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-12-17T14:20:46.609+01:00  INFO 42244 --- [ai-question-generator] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+AI API Failed: Failed to generate content
+Generating fallback questions for: Marketing
+Falling back to MOCK generator.
+Generating fallback questions for: Marketing
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Law
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Law
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Communication
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Communication
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Communication
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Communication
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Law
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Law
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Marketing
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Generating fallback questions for: Marketing

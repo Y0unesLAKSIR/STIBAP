@@ -1,0 +1,110 @@
+Marketing Diagnostic
+
+AI-Powered Competency Assessment
+1. Mock Question 1 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+2. Mock Question 2 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+3. Mock Question 3 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+4. Mock Question 4 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+5. Mock Question 5 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+6. Mock Question 6 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+7. Mock Question 7 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+8. Mock Question 8 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+9. Mock Question 9 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+10. Mock Question 10 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+11. Mock Question 11 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+12. Mock Question 12 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+13. Mock Question 13 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+14. Mock Question 14 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+15. Mock Question 15 about Marketing (AI Quota Exceeded)Mock Category
+Correct Option
+Wrong A
+Wrong B
+Wrong C
+
+
+backend console : 
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Marketing "HTTP/1.1 200 "
+INFO:httpx:HTTP Request: GET http://localhost:8081/api/generate?subject=Marketing "HTTP/1.1 200 "
+INFO:     127.0.0.1:54464 - "GET /api/qcm/questions?subject=Marketing&count=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54465 - "GET /api/qcm/questions?subject=Marketing&count=15 HTTP/1.1" 200 OK
+
+frontend : 
+Compiled successfully!
+
+You can now view stibap-frontend in the browser.
+
+  Local:            http://localhost:3001
+  On Your Network:  http://172.26.0.1:3001
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+
+qcmAiGenerator CONSOLE : 
+2025-12-17T14:07:17.687+01:00  INFO 17344 --- [ai-question-generator] [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-17T14:07:17.688+01:00  INFO 17344 --- [ai-question-generator] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-12-17T14:07:17.689+01:00  INFO 17344 --- [ai-question-generator] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+AI API Failed: Failed to generate content
+AI API Failed: Failed to generate content
+Falling back to MOCK generator.
+Falling back to MOCK generator.
+
+at lest now it doesnt generate random questions that have nothing to do with the subject, but still it doesnt generate questions, it only generates the wrong and correct options ..etc
+can you look into that and fix it properly ? 

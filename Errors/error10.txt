@@ -1,0 +1,119 @@
+PS C:\DEV\PFA\qcmAiGenerator\ai-question-generator> mvn spring-boot:run
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -------------------< ma.emsi:ai-question-generator >--------------------
+[INFO] Building ai-question-generator 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] >>> spring-boot:3.4.0:run (default-cli) > test-compile @ ai-question-generator >>>
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ ai-question-generator ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ ai-question-generator ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ ai-question-generator ---
+[INFO] skip non existing resourceDirectory C:\DEV\PFA\qcmAiGenerator\ai-question-generator\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ ai-question-generator ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] <<< spring-boot:3.4.0:run (default-cli) < test-compile @ ai-question-generator <<<
+[INFO]
+[INFO]
+[INFO] --- spring-boot:3.4.0:run (default-cli) @ ai-question-generator ---
+Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.4.0/spring-boot-buildpack-platform-3.4.0.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.4.0/spring-boot-buildpack-platform-3.4.0.pom (3.2 kB at 6.4 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/client5/httpclient5/5.4.1/httpclient5-5.4.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/client5/httpclient5/5.4.1/httpclient5-5.4.1.pom (6.1 kB at 64 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/client5/httpclient5-parent/5.4.1/httpclient5-parent-5.4.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/client5/httpclient5-parent/5.4.1/httpclient5-parent-5.4.1.pom (16 kB at 196 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5/5.3.1/httpcore5-5.3.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5/5.3.1/httpcore5-5.3.1.pom (3.9 kB at 52 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5-parent/5.3.1/httpcore5-parent-5.3.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5-parent/5.3.1/httpcore5-parent-5.3.1.pom (14 kB at 164 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5-h2/5.3.1/httpcore5-h2-5.3.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5-h2/5.3.1/httpcore5-h2-5.3.1.pom (3.6 kB at 49 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-loader-tools/3.4.0/spring-boot-loader-tools-3.4.0.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-loader-tools/3.4.0/spring-boot-loader-tools-3.4.0.pom (2.2 kB at 29 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-observation/1.14.0/micrometer-observation-1.14.0.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-observation/1.14.0/micrometer-observation-1.14.0.pom (3.8 kB at 45 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-commons/1.14.0/micrometer-commons-1.14.0.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-commons/1.14.0/micrometer-commons-1.14.0.pom (3.4 kB at 47 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.4.0/spring-boot-buildpack-platform-3.4.0.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-buildpack-platform/3.4.0/spring-boot-buildpack-platform-3.4.0.jar (297 kB at 1.8 MB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/client5/httpclient5/5.4.1/httpclient5-5.4.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5-h2/5.3.1/httpcore5-h2-5.3.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5/5.3.1/httpcore5-5.3.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-observation/1.14.0/micrometer-observation-1.14.0.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-loader-tools/3.4.0/spring-boot-loader-tools-3.4.0.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/client5/httpclient5/5.4.1/httpclient5-5.4.1.jar (908 kB at 6.7 MB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-commons/1.14.0/micrometer-commons-1.14.0.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-observation/1.14.0/micrometer-observation-1.14.0.jar (75 kB at 454 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-commons/1.14.0/micrometer-commons-1.14.0.jar (48 kB at 228 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-loader-tools/3.4.0/spring-boot-loader-tools-3.4.0.jar (464 kB at 1.5 MB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5/5.3.1/httpcore5-5.3.1.jar (906 kB at 2.4 MB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/core5/httpcore5-h2/5.3.1/httpcore5-h2-5.3.1.jar (241 kB at 457 kB/s)
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.0)
+
+2025-12-17T12:37:22.874+01:00  INFO 33772 --- [ai-question-generator] [  restartedMain] m.e.a.AiQuestionGeneratorApplication     : Starting AiQuestionGeneratorApplication using Java 21.0.1 with PID 33772 (C:\DEV\PFA\qcmAiGenerator\ai-question-generator\target\classes started by Youssef in C:\DEV\PFA\qcmAiGenerator\ai-question-generator)
+2025-12-17T12:37:22.876+01:00  INFO 33772 --- [ai-question-generator] [  restartedMain] m.e.a.AiQuestionGeneratorApplication     : No active profile set, falling back to 1 default profile: "default"
+2025-12-17T12:37:23.043+01:00  INFO 33772 --- [ai-question-generator] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-17T12:37:23.043+01:00  INFO 33772 --- [ai-question-generator] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-17T12:37:23.404+01:00  WARN 33772 --- [ai-question-generator] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [ma.emsi.ai_question_generator.AiQuestionGeneratorApplication]: Component scan for configuration class [org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration$PlainFunctionScanConfiguration] could not be used with conditions in REGISTER_BEAN phase: [org.springframework.boot.autoconfigure.condition.OnBeanCondition@309a2036]
+2025-12-17T12:37:23.409+01:00  INFO 33772 --- [ai-question-generator] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger :
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-17T12:37:23.425+01:00 ERROR 33772 --- [ai-question-generator] [  restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [ma.emsi.ai_question_generator.AiQuestionGeneratorApplication]: Component scan for configuration class [org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration$PlainFunctionScanConfiguration] could not be used with conditions in REGISTER_BEAN phase: [org.springframework.boot.autoconfigure.condition.OnBeanCondition@309a2036]
+        at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:613) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:836) ~[spring-context-6.2.0.jar:6.2.0]
+        at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[na:na]
+        at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:833) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:803) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:189) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:418) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:791) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:609) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.0.jar:3.4.0]
+        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.0.jar:3.4.0]
+        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.0.jar:3.4.0]
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.0.jar:3.4.0]
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.0.jar:3.4.0]
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.0.jar:3.4.0]
+        at ma.emsi.ai_question_generator.AiQuestionGeneratorApplication.main(AiQuestionGeneratorApplication.java:10) ~[classes/:na]
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+        at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.4.0.jar:3.4.0]
+Caused by: org.springframework.context.ApplicationContextException: Component scan for configuration class [org.springframework.cloud.function.context.config.ContextFunctionCatalogAutoConfiguration$PlainFunctionScanConfiguration] could not be used with conditions in REGISTER_BEAN phase: [org.springframework.boot.autoconfigure.condition.OnBeanCondition@309a2036]
+        at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:327) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:267) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassParser.processMemberClasses(ConfigurationClassParser.java:413) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:294) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:267) ~[spring-context-6.2.0.jar:6.2.0]
+        at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:603) ~[spring-context-6.2.0.jar:6.2.0]
+        ... 21 common frames omitted
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.976 s
+[INFO] Finished at: 2025-12-17T12:37:23+01:00
+[INFO] ------------------------------------------------------------------------
+PS C:\DEV\PFA\qcmAiGenerator\ai-question-generator>
