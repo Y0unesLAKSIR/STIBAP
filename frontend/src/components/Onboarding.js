@@ -12,14 +12,12 @@ const Onboarding = () => {
   const navigate = useNavigate();
 
   // Form data
-  const [learningGoals, setLearningGoals] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [timeAvailability, setTimeAvailability] = useState('');
   const [recommendations, setRecommendations] = useState([]);
 
   // Options from backend
   const [difficulties, setDifficulties] = useState([]);
-  const [mainCategories, setMainCategories] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState('');
 
@@ -33,28 +31,18 @@ const Onboarding = () => {
 
     try {
       console.log('Fetching difficulties and categories...');
-      const [diffData, catData] = await Promise.all([
-        apiClient.getDifficulties(),
-        apiClient.getMainCategories()
-      ]);
+      const diffData = await apiClient.getDifficulties();
 
       console.log('Difficulties response:', diffData);
-      console.log('Categories response:', catData);
 
       const diffArray = diffData.data || [];
-      const catArray = catData.data || [];
 
       console.log('Setting difficulties:', diffArray);
-      console.log('Setting categories:', catArray);
 
       setDifficulties(diffArray);
-      setMainCategories(catArray);
 
       if (diffArray.length === 0) {
         setDataError('No difficulty levels found. Make sure the backend is running and database is set up.');
-      }
-      if (catArray.length === 0) {
-        setDataError('No categories found. Make sure the backend is running and database is set up.');
       }
     } catch (err) {
       console.error('Error loading options:', err);
@@ -66,29 +54,19 @@ const Onboarding = () => {
         { id: '2', name: 'Intermediate', description: 'Some basic knowledge required. Build on fundamentals.', level: 2 },
         { id: '3', name: 'Advanced', description: 'Strong foundation required. Deep dive into complex topics.', level: 3 }
       ]);
-      setMainCategories([
-        { id: '1', name: 'Languages', description: 'Programming and spoken languages', icon: '🗣️' },
-        { id: '2', name: 'Science', description: 'Natural and applied sciences', icon: '🔬' },
-        { id: '3', name: 'Mathematics', description: 'Pure and applied mathematics', icon: '📐' },
-        { id: '4', name: 'Physics', description: 'Classical and modern physics', icon: '⚛️' }
-      ]);
     } finally {
       setDataLoading(false);
     }
   };
 
   const handleNext = () => {
-    if (step === 1 && !learningGoals.trim()) {
-      setError('Please tell us what you want to learn');
-      return;
-    }
-    if (step === 2 && !selectedDifficulty) {
+    if (step === 1 && !selectedDifficulty) {
       setError('Please select your skill level');
       return;
     }
 
     setError('');
-    if (step < 3) {
+    if (step < 2) {
       setStep(step + 1);
     }
   };
@@ -107,7 +85,6 @@ const Onboarding = () => {
 
     try {
       const preferences = {
-        learning_goals: learningGoals,
         preferred_difficulty_id: selectedDifficulty,
         preferred_categories: [],  // Categories will be extracted from AI prompt
         time_availability_minutes: timeAvailability ? parseInt(timeAvailability) : null
@@ -117,7 +94,7 @@ const Onboarding = () => {
 
       if (response.success) {
         setRecommendations(response.recommendations || []);
-        setStep(4); // Show recommendations
+        setStep(3); // Show recommendations
       }
     } catch (err) {
       setError(err.message || 'Failed to complete onboarding');
@@ -129,8 +106,10 @@ const Onboarding = () => {
     navigate('/home');
   };
 
+  const totalSteps = 3;
+
   const getProgressPercentage = () => {
-    return (step / 4) * 100;
+    return (step / totalSteps) * 100;
   };
 
   return (
@@ -144,42 +123,11 @@ const Onboarding = () => {
           />
         </div>
 
-        {/* Step 1: Learning Goals */}
+        {/* Step 1: Skill Level */}
         {step === 1 && (
           <div className="onboarding-step">
             <h1 className="onboarding-title">Welcome! Let's Get Started 🎓</h1>
-            <p className="onboarding-subtitle">Tell us what you'd like to learn</p>
-
-            {error && <div className="error-message">{error}</div>}
-
-            <div className="form-group">
-              <label htmlFor="learningGoals">What do you want to learn?</label>
-              <textarea
-                id="learningGoals"
-                value={learningGoals}
-                onChange={(e) => setLearningGoals(e.target.value)}
-                placeholder="E.g., I want to learn Python for data science, understand quantum physics, improve my calculus skills..."
-                rows={5}
-                className="textarea-large"
-              />
-              <p className="helper-text">
-                Be as specific as possible. Our AI will use this to recommend the best courses for you!
-              </p>
-            </div>
-
-            <div className="button-group">
-              <button onClick={handleNext} className="btn-primary">
-                Next →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 2: Skill Level */}
-        {step === 2 && (
-          <div className="onboarding-step">
-            <h1 className="onboarding-title">What's Your Current Level? 📊</h1>
-            <p className="onboarding-subtitle">This helps us match you with the right courses</p>
+            <p className="onboarding-subtitle">Select your current skill level</p>
 
             {error && <div className="error-message">{error}</div>}
             {dataError && <div className="error-message" style={{ backgroundColor: '#fff3cd', color: '#856404', borderColor: '#ffc107' }}>{dataError}</div>}
@@ -214,9 +162,6 @@ const Onboarding = () => {
             )}
 
             <div className="button-group">
-              <button onClick={handleBack} className="btn-secondary">
-                ← Back
-              </button>
               <button onClick={handleNext} className="btn-primary">
                 Next →
               </button>
@@ -224,8 +169,8 @@ const Onboarding = () => {
           </div>
         )}
 
-        {/* Step 3: Time Availability */}
-        {step === 3 && (
+        {/* Step 2: Time Availability */}
+        {step === 2 && (
           <div className="onboarding-step">
             <h1 className="onboarding-title">How Much Time Can You Dedicate? ⏰</h1>
             <p className="onboarding-subtitle">This is optional but helps us plan better</p>
@@ -267,8 +212,8 @@ const Onboarding = () => {
           </div>
         )}
 
-        {/* Step 4: Recommendations */}
-        {step === 4 && (
+        {/* Step 3: Recommendations */}
+        {step === 3 && (
           <div className="onboarding-step">
             <h1 className="onboarding-title">Your Personalized Learning Path 🎉</h1>
             <p className="onboarding-subtitle">Based on your preferences, we recommend:</p>

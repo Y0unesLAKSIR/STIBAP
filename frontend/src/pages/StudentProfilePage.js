@@ -18,14 +18,6 @@ const StudentProfilePage = () => {
         internet: true
     });
 
-    const subjects = [
-        "Java", "JEE", "DotNet", "Python", "Web", "Mobile", "Cloud", "AI",
-        "Data Science", "DevOps", "Cybersecurity", "Database", "Networks",
-        "Algorithms", "Maths_Adv", "Statistics", "Physics", "Chemistry",
-        "Biology", "Marketing", "Management", "Accounting", "Economics",
-        "Law", "Communication", "English", "French", "History", "Audit"
-    ];
-
     // Styles
     const styles = {
         container: {
@@ -228,28 +220,11 @@ const StudentProfilePage = () => {
                     <p style={styles.subtitle}>
                         Quiz Score: <span style={styles.scoreBadge}>{qcmResult.grade_20}/20</span>
                         <br />
-                        Configuring for Intelligent Tutor...
+                        Configuring for Intelligent Tutor in {formData.subject}
                     </p>
                 </div>
 
                 <form onSubmit={handleSubmit} style={styles.formContent}>
-
-                    <h3 style={styles.sectionTitle}>Target Subject</h3>
-                    <div style={{ marginBottom: '32px' }}>
-                        <div style={styles.inputGroup}>
-                            <label style={styles.label}>Select the Subject for Analysis</label>
-                            <select
-                                name="subject"
-                                value={formData.subject}
-                                onChange={handleChange}
-                                style={styles.select}
-                            >
-                                {subjects.map(sub => (
-                                    <option key={sub} value={sub}>{sub}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
 
                     <h3 style={styles.sectionTitle}>Academic Habits</h3>
                     <div style={styles.grid}>

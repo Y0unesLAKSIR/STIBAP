@@ -137,6 +137,33 @@ class Database:
             .single()\
             .execute()
         return response.data
+
+    async def get_courses_by_difficulty_id(self, difficulty_id: str) -> List[Dict]:
+        """Get courses filtered by difficulty level ID"""
+        response = self.client.table('courses')\
+            .select('*, category:categories(*), difficulty:difficulty_levels(*)')\
+            .eq('difficulty_id', difficulty_id)\
+            .eq('is_active', True)\
+            .execute()
+        return response.data
+
+    async def get_difficulty_by_name(self, difficulty_name: str) -> Optional[Dict]:
+        """Resolve a difficulty level by name (case-insensitive)"""
+        if not difficulty_name:
+            return None
+        response = self.client.table('difficulty_levels')\
+            .select('*')\
+            .ilike('name', difficulty_name)\
+            .limit(1)\
+            .execute()
+        return response.data[0] if response.data else None
+
+    async def get_courses_by_difficulty_name(self, difficulty_name: str) -> List[Dict]:
+        """Get courses for a given difficulty name"""
+        difficulty = await self.get_difficulty_by_name(difficulty_name)
+        if not difficulty:
+            return []
+        return await self.get_courses_by_difficulty_id(difficulty['id'])
     
     # User Preferences
     async def get_user_preferences(self, user_id: str) -> Optional[Dict]:

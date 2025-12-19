@@ -13,7 +13,7 @@ const AuthContext = createContext({});
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => getCurrentUser());
   const [loading, setLoading] = useState(true);
 
   const checkSession = useCallback(async () => {
@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
     const currentUser = getCurrentUser();
     
     if (currentUser) {
+      setUser(currentUser);
       // Verify session with server
       const result = await verifySession();
       
@@ -39,6 +40,15 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check if user has active session on mount
     checkSession();
+  }, [checkSession]);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      checkSession();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [checkSession]);
 
   const signUp = async (email, password, fullName = null) => {

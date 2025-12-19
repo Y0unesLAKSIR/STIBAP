@@ -189,6 +189,17 @@ async def get_difficulties():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/api/courses/by-difficulty")
+async def get_courses_by_difficulty(name: str):
+    """Return active courses that match the provided difficulty name"""
+    try:
+        courses = await db.get_courses_by_difficulty_name(name)
+        return {"success": True, "data": courses}
+    except Exception as e:
+        logger.error(f"Error fetching courses by difficulty: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ============================================
 # Courses Endpoints
 # ============================================

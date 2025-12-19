@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LandingPage = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (user) {
+            navigate('/home', { replace: true });
+        }
+    }, [user, navigate]);
 
     const styles = {
         container: {

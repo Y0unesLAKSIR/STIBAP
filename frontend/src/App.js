@@ -16,6 +16,7 @@ import StudentProfilePage from './pages/StudentProfilePage';
 import LandingPage from './pages/LandingPage';
 import SubjectSelectionPage from './pages/SubjectSelectionPage';
 import DiagnosticPage from './pages/DiagnosticPage';
+import CoursesPage from './pages/CoursesPage';
 
 function App() {
   return (
@@ -56,6 +57,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Admin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses"
+            element={
+              <ProtectedRoute>
+                <CoursesPage />
               </ProtectedRoute>
             }
           />

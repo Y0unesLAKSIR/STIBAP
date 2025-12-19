@@ -1,13 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../services/apiClient';
+import { getAverageQuizScore, getLatestQuizSubject, QUIZ_HISTORY_EVENT } from '../utils/quizMetrics';
+import {
+  RECOMMENDATION_EVENT,
+  readQuizRecommendations,
+  readCourseInteractions,
+} from '../utils/recommendationStorage';
 
 const Home = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
+  const [quizRecommendations, setQuizRecommendations] = useState([]);
+  const [courseInteractions, setCourseInteractions] = useState([]);
+  const [userProgress, setUserProgress] = useState([]);
+  const [coursesInProgress, setCoursesInProgress] = useState(0);
+  const [studyHours, setStudyHours] = useState(0);
+  const [avgQuizScore, setAvgQuizScore] = useState(null);
+  const [nextGoal, setNextGoal] = useState('');
+  const [goalSourceLabel, setGoalSourceLabel] = useState('');
+  const [learningGoal, setLearningGoal] = useState('');
 
   useEffect(() => {
     const loadRecommendations = async () => {
@@ -29,6 +44,144 @@ const Home = () => {
 
     loadRecommendations();
   }, [user]);
+
+  useEffect(() => {
+    const syncLocalLists = () => {
+      setQuizRecommendations(readQuizRecommendations());
+      setCourseInteractions(readCourseInteractions());
+    };
+
+    syncLocalLists();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener(RECOMMENDATION_EVENT, syncLocalLists);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener(RECOMMENDATION_EVENT, syncLocalLists);
+      }
+    };
+  }, []);
+ 
+  useEffect(() => {
+    setAvgQuizScore(getAverageQuizScore());
+
+    if (typeof window !== 'undefined') {
+      const handleHistoryUpdate = () => {
+        setAvgQuizScore(getAverageQuizScore());
+      };
+      window.addEventListener(QUIZ_HISTORY_EVENT, handleHistoryUpdate);
+      return () => {
+        window.removeEventListener(QUIZ_HISTORY_EVENT, handleHistoryUpdate);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadUserMetrics = async () => {
+      if (!user?.id) {
+        setUserProgress([]);
+        setCoursesInProgress(0);
+        setStudyHours(0);
+        setLearningGoal('');
+        return;
+      }
+
+      try {
+        const [progressRes, preferencesRes] = await Promise.all([
+          apiClient.getUserProgress(user.id),
+          apiClient.getUserPreferences(user.id),
+        ]);
+
+        if (isMounted && progressRes?.success) {
+          const progressData = progressRes.data || [];
+          setUserProgress(progressData);
+          const inProgress = progressData.filter((entry) => entry.status !== 'completed').length;
+          setCoursesInProgress(inProgress);
+          const minutesLogged = progressData.reduce((sum, entry) => {
+            const duration = entry.course?.duration_minutes ?? 0;
+            const percent = Math.max(0, Math.min(100, entry.progress_percentage ?? 0));
+            return sum + (duration * percent) / 100;
+          }, 0);
+          setStudyHours(Number((minutesLogged / 60).toFixed(1)));
+        }
+
+        if (isMounted && preferencesRes?.success) {
+          setLearningGoal(preferencesRes.data?.learning_goals ?? '');
+        }
+      } catch (error) {
+        console.error('Failed to load user metrics', error);
+      }
+    };
+
+    loadUserMetrics();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
+
+  const curatedRecommendations = useMemo(() => {
+    const sourceEntries = [];
+    quizRecommendations.forEach((course) =>
+      sourceEntries.push({ course, source: 'quiz' })
+    );
+    courseInteractions.forEach((course) =>
+      sourceEntries.push({ course, source: 'course' })
+    );
+
+    const uniqueById = [];
+    const seen = new Set();
+    sourceEntries.forEach((entry) => {
+      const courseId = entry.course?.id;
+      if (!courseId || seen.has(courseId)) {
+        return;
+      }
+      seen.add(courseId);
+      uniqueById.push(entry);
+    });
+
+    if (uniqueById.length > 0) {
+      return uniqueById;
+    }
+
+    return recommendations.map((rec) => ({
+      course: rec.course,
+      confidence_score: rec.confidence_score,
+      source: 'ai',
+    }));
+  }, [quizRecommendations, courseInteractions, recommendations]);
+
+  useEffect(() => {
+    if (recommendations.length > 0) {
+      const topCourse = recommendations[0]?.course;
+      if (topCourse?.title) {
+        setNextGoal(`Continue ${topCourse.title}`);
+        setGoalSourceLabel('AI recommendation');
+        return;
+      }
+    }
+
+    if (learningGoal) {
+      setNextGoal(learningGoal);
+      setGoalSourceLabel('Learning objective');
+      return;
+    }
+
+    setNextGoal('');
+    setGoalSourceLabel('');
+  }, [recommendations, learningGoal]);
+
+  useEffect(() => {
+    const latestQuizSubject = getLatestQuizSubject();
+    if (latestQuizSubject) {
+      setNextGoal(`Master ${latestQuizSubject}`);
+      setGoalSourceLabel('Last diagnostic');
+    }
+  }, [recommendations]);
 
   const handleSignOut = async () => {
     try {
@@ -281,6 +434,12 @@ const Home = () => {
           >
             📊 Performance
           </button>
+          <button
+            onClick={() => navigate('/courses')}
+            style={{ ...styles.navButton, ...styles.primaryNavButton }}
+          >
+            🎓 Courses
+          </button>
           <button onClick={() => navigate('/settings')} style={styles.navButton}>
             ⚙️ Settings
           </button>
@@ -305,28 +464,51 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Static Stats Grid */}
         <div style={styles.statsGrid}>
           <div style={styles.statCard}>
             <span style={styles.statLabel}>Courses in Progress</span>
-            <span style={styles.statValue}>3</span>
-            <span style={styles.statTrend}>+1 this week</span>
+            <span style={styles.statValue}>{coursesInProgress}</span>
+            <span style={styles.statTrend}>
+              {userProgress.length > 0
+                ? `Tracking ${userProgress.length} course${userProgress.length > 1 ? 's' : ''}`
+                : 'No active course yet'}
+            </span>
           </div>
           <div style={styles.statCard}>
             <span style={styles.statLabel}>Study Hours</span>
-            <span style={styles.statValue}>12.5</span>
-            <span style={styles.statTrend}>↑ 15% vs last week</span>
+            <span style={styles.statValue}>
+              {studyHours ? `${studyHours} hr${studyHours !== 1 ? 's' : ''}` : '0 hrs'}
+            </span>
+            <span style={styles.statTrend}>
+              {studyHours ? 'Estimated time from progress' : 'Open a course to start tracking'}
+            </span>
           </div>
           <div style={styles.statCard}>
             <span style={styles.statLabel}>Avg. Quiz Score</span>
-            <span style={styles.statValue}>85%</span>
-            <span style={{ ...styles.statTrend, color: '#4f46e5' }}>Top 10% of class</span>
+            <span style={styles.statValue}>
+              {avgQuizScore ? `${avgQuizScore.toFixed(1)} / 20` : 'Diagnostic pending'}
+            </span>
+            <span style={{ ...styles.statTrend, color: avgQuizScore ? '#4f46e5' : '#6b7280' }}>
+              {avgQuizScore ? 'Based on past diagnostics' : 'Complete a diagnostic test'}
+            </span>
           </div>
           <div style={styles.statCard}>
             <span style={styles.statLabel}>Next Goal</span>
-            <span style={{ ...styles.statValue, fontSize: '1.2rem', marginTop: 'auto' }}>
-              Complete Algebra II
+            <span
+              style={{
+                ...styles.statValue,
+                fontSize: '1.2rem',
+                marginTop: 'auto',
+                color: '#1f2937',
+              }}
+            >
+              {nextGoal || 'Complete a diagnostic test'}
             </span>
+            {goalSourceLabel && (
+              <span style={{ ...styles.statTrend, color: '#6b7280' }}>
+                Suggested by {goalSourceLabel}
+              </span>
+            )}
           </div>
         </div>
 
@@ -359,38 +541,44 @@ const Home = () => {
           <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>
             Loading your personalized recommendations...
           </div>
-        ) : recommendations.length === 0 ? (
+        ) : curatedRecommendations.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px', backgroundColor: 'white', borderRadius: '12px' }}>
             <p>No recommendations yet. Complete the <b style={{ cursor: 'pointer', color: '#4f46e5' }} onClick={() => navigate('/diagnostic')}>Diagnostic Test</b> to get started!</p>
           </div>
         ) : (
           <div style={styles.recommendationsGrid}>
-            {recommendations.map((rec, index) => (
-              <div
-                key={index}
-                style={styles.courseCard}
-                onClick={() => navigate(`/courses/${rec.course?.id}`)}
-                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
-                onMouseOut={(e) => e.currentTarget.style.transform = 'none'}
-              >
-                <div style={styles.courseHeader}>
-                  <span style={{ fontSize: '3rem', opacity: 0.5 }}>📚</span>
-                  <span style={styles.matchBadge}>
-                    {Math.round((rec.confidence_score || 0) * 100)}% Match
-                  </span>
-                </div>
-                <div style={styles.courseContent}>
-                  <h3 style={styles.courseTitle}>{rec.course?.title}</h3>
-                  <p style={styles.courseDesc}>
-                    {rec.course?.description || 'No description available'}
-                  </p>
-                  <div style={styles.courseFooter}>
-                    <span style={styles.tag}>{rec.course?.difficulty?.name || 'All Levels'}</span>
-                    <span style={styles.startLink}>Start →</span>
+            {curatedRecommendations.map((rec, index) => {
+              const course = rec.course;
+              const badgeText =
+                rec.source === 'quiz'
+                  ? 'Quiz suggestion'
+                  : rec.source === 'course'
+                  ? 'Recent interaction'
+                  : `${Math.round((rec.confidence_score || 0.6) * 100)}% Match`;
+
+              return (
+                <div
+                  key={`${course?.id ?? index}-${badgeText}`}
+                  style={styles.courseCard}
+                  onClick={() => course?.id && navigate(`/courses/${course.id}`)}
+                  onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
+                  onMouseOut={(e) => (e.currentTarget.style.transform = 'none')}
+                >
+                  <div style={styles.courseHeader}>
+                    <span style={{ fontSize: '3rem', opacity: 0.5 }}>📚</span>
+                    <span style={styles.matchBadge}>{badgeText}</span>
+                  </div>
+                  <div style={styles.courseContent}>
+                    <h3 style={styles.courseTitle}>{course?.title || 'Course'}</h3>
+                    <p style={styles.courseDesc}>{course?.description || 'No description available'}</p>
+                    <div style={styles.courseFooter}>
+                      <span style={styles.tag}>{course?.difficulty?.name || 'All Levels'}</span>
+                      <span style={styles.startLink}>Start →</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

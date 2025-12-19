@@ -4,6 +4,7 @@ import { getSessionToken } from '../services/customAuth';
 import apiClient from '../services/apiClient';
 import ProgressBar from './ProgressBar';
 import './CoursePlayer.css';
+import { recordCourseInteraction } from '../utils/recommendationStorage';
 
 const CoursePlayer = () => {
   const [mdLib, setMdLib] = useState({ ReactMarkdown: null, remarkGfm: null });
@@ -61,6 +62,7 @@ const CoursePlayer = () => {
         const outlineResp = await apiClient.getCourseOutline(courseId);
         if (!outlineResp.success) throw new Error(outlineResp.error || 'Failed to load outline');
         setOutline(outlineResp.data);
+        recordCourseInteraction(outlineResp.data?.course);
 
         // default select first unit
         const firstMod = outlineResp.data.modules?.[0] || null;

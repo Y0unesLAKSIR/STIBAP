@@ -68,6 +68,10 @@ class APIClient {
     return this.request(`/api/courses/${courseId}`);
   }
 
+  async getCoursesByDifficulty(name) {
+    return this.request(`/api/courses/by-difficulty?name=${encodeURIComponent(name)}`);
+  }
+
   async getCourseOutline(courseId) {
     // per requirement, backend returns full content for all units
     return this.request(`/api/courses/${courseId}/outline?include_content=true`);

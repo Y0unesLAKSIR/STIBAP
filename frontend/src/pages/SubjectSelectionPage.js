@@ -5,6 +5,38 @@ const SubjectSelectionPage = () => {
     const navigate = useNavigate();
 
     // Full list of 31 Subjects supported by the Backend
+    const quizEnabledSubjects = new Set([
+        'Java',
+        'JEE',
+        'Python',
+        'DotNet',
+        'Web',
+        'Mobile',
+        'Cloud',
+        'AI',
+        'Data Science',
+        'DevOps',
+        'Cybersecurity',
+        'Database',
+        'Networks',
+        'Algorithms',
+        'Maths_Adv',
+        'Statistics',
+        'Physics',
+        'Chemistry',
+        'Biology',
+        'Marketing',
+        'Management',
+        'Accounting',
+        'Economics',
+        'Law',
+        'Audit',
+        'Communication',
+        'English',
+        'French',
+        'History'
+    ]);
+
     const subjects = [
         // IT & Programming
         { id: 'Java', title: 'Java', icon: '☕', description: 'OOP, Streams, Polymorphism' },
@@ -45,7 +77,9 @@ const SubjectSelectionPage = () => {
     ];
 
     const handleSubjectClick = (subject) => {
-        // Direct routing to the generic diagnostic page
+        if (!quizEnabledSubjects.has(subject.id)) {
+            return;
+        }
         navigate(`/diagnostic/${subject.id}`);
     };
 
@@ -146,34 +180,58 @@ const SubjectSelectionPage = () => {
                 </div>
 
                 <div style={styles.grid}>
-                    {subjects.map((subject) => (
-                        <div
-                            key={subject.id}
-                            onClick={() => handleSubjectClick(subject)}
-                            style={styles.card}
-                            onMouseOver={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
-                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
-                                e.currentTarget.style.borderColor = '#6366f1';
-                                e.currentTarget.querySelector('.icon-wrapper').style.backgroundColor = '#eef2ff';
-                                e.currentTarget.querySelector('.icon-wrapper').style.transform = 'scale(1.1) rotate(5deg)';
-                            }}
-                            onMouseOut={(e) => {
-                                e.currentTarget.style.transform = 'none';
-                                e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.05)';
-                                e.currentTarget.style.borderColor = '#e2e8f0';
-                                e.currentTarget.querySelector('.icon-wrapper').style.backgroundColor = '#f1f5f9';
-                                e.currentTarget.querySelector('.icon-wrapper').style.transform = 'none';
-                            }}
-                        >
-                            <div className="icon-wrapper" style={styles.iconWrapper}>
-                                {subject.icon}
+                    {subjects.map((subject) => {
+                        const disabled = !quizEnabledSubjects.has(subject.id);
+                        return (
+                            <div
+                                key={subject.id}
+                                onClick={() => handleSubjectClick(subject)}
+                                style={{
+                                    ...styles.card,
+                                    cursor: disabled ? 'not-allowed' : 'pointer',
+                                    opacity: disabled ? 0.45 : 1,
+                                    borderColor: disabled ? '#d1d5db' : '#e2e8f0',
+                                }}
+                                onMouseOver={(e) => {
+                                    if (disabled) return;
+                                    e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                                    e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
+                                    e.currentTarget.style.borderColor = '#6366f1';
+                                    e.currentTarget.querySelector('.icon-wrapper').style.backgroundColor = '#eef2ff';
+                                    e.currentTarget.querySelector('.icon-wrapper').style.transform = 'scale(1.1) rotate(5deg)';
+                                }}
+                                onMouseOut={(e) => {
+                                    if (disabled) return;
+                                    e.currentTarget.style.transform = 'none';
+                                    e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.05)';
+                                    e.currentTarget.style.borderColor = '#e2e8f0';
+                                    e.currentTarget.querySelector('.icon-wrapper').style.backgroundColor = '#f1f5f9';
+                                    e.currentTarget.querySelector('.icon-wrapper').style.transform = 'none';
+                                }}
+                            >
+                                <div className="icon-wrapper" style={styles.iconWrapper}>
+                                    {subject.icon}
+                                </div>
+                                <div style={styles.badge} title="Active Module" />
+                                <h3 style={styles.cardTitle}>{subject.title}</h3>
+                                <p style={styles.cardDesc}>{subject.description}</p>
+                                {disabled && (
+                                    <span
+                                        style={{
+                                            position: 'absolute',
+                                            bottom: '16px',
+                                            left: '50%',
+                                            transform: 'translateX(-50%)',
+                                            fontSize: '0.8rem',
+                                            color: '#9ca3af',
+                                        }}
+                                    >
+                                        Quiz coming soon
+                                    </span>
+                                )}
                             </div>
-                            <div style={styles.badge} title="Active Module" />
-                            <h3 style={styles.cardTitle}>{subject.title}</h3>
-                            <p style={styles.cardDesc}>{subject.description}</p>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </div>

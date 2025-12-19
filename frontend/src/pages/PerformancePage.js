@@ -1,10 +1,67 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  updateQuizRecommendations,
+  recordCourseInteraction,
+} from '../utils/recommendationStorage';
 
 const PerformancePage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { prediction, qcmResult, subject } = location.state || {}; // Added subject from state
+    const [recommendedCourses, setRecommendedCourses] = useState([]);
+    const [coursesLoading, setCoursesLoading] = useState(false);
+    const [coursesError, setCoursesError] = useState('');
+
+    const mapScoreToDifficulty = (score) => {
+        if (score >= 16) return 'Advanced';
+        if (score >= 11) return 'Intermediate';
+        return 'Beginner';
+    };
+
+    const recommendedDifficulty = qcmResult ? mapScoreToDifficulty(qcmResult.grade_20) : null;
+
+    useEffect(() => {
+        if (!recommendedDifficulty) {
+            setRecommendedCourses([]);
+            setCoursesError('');
+            setCoursesLoading(false);
+            return;
+        }
+
+        const controller = new AbortController();
+
+        const fetchCourses = async () => {
+            setCoursesLoading(true);
+            setCoursesError('');
+            try {
+                const response = await fetch(`http://localhost:8000/api/courses/by-difficulty?name=${encodeURIComponent(recommendedDifficulty)}`, {
+                    signal: controller.signal
+                });
+                const payload = await response.json();
+                if (payload.success) {
+                    const courses = payload.data || [];
+                    setRecommendedCourses(courses);
+                    updateQuizRecommendations(courses);
+                } else {
+                    setCoursesError(payload.detail || 'Unable to load course recommendations');
+                }
+            } catch (error) {
+                if (!controller.signal.aborted) {
+                    console.error('Failed to fetch difficulty-specific courses', error);
+                    setCoursesError('Network error loading course recommendations');
+                }
+            } finally {
+                if (!controller.signal.aborted) {
+                    setCoursesLoading(false);
+                }
+            }
+        };
+
+        fetchCourses();
+
+        return () => controller.abort();
+    }, [recommendedDifficulty]);
 
     // Styles
     const styles = {
@@ -173,6 +230,52 @@ const PerformancePage = () => {
             backgroundColor: 'white',
             borderRadius: '16px',
             boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+        },
+        recommendPanel: {
+            marginTop: '32px',
+            padding: '24px',
+            borderRadius: '20px',
+            backgroundColor: 'white',
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+            border: '1px solid #e5e7eb',
+        },
+        recommendTitle: {
+            fontSize: '1.4rem',
+            fontWeight: '700',
+            marginBottom: '16px',
+            color: '#111827',
+        },
+        recommendGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: '16px',
+        },
+        recommendCard: {
+            padding: '20px',
+            borderRadius: '16px',
+            backgroundColor: '#f8fafc',
+            border: '1px solid #e5e7eb',
+            minHeight: '180px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        },
+        courseTitle: {
+            fontSize: '1.05rem',
+            fontWeight: '600',
+            marginBottom: '8px',
+            color: '#1f2937',
+        },
+        courseMeta: {
+            fontSize: '0.9rem',
+            color: '#475569',
+            marginBottom: '12px',
+        },
+        courseLink: {
+            marginTop: 'auto',
+            textDecoration: 'none',
+            color: '#4f46e5',
+            fontWeight: '600',
         }
     };
 
@@ -273,6 +376,62 @@ const PerformancePage = () => {
                         </button>
                     </div>
                 </div>
+
+                {/* Difficulty-specific course recommendations */}
+                {(recommendedCourses.length > 0 || coursesLoading || coursesError) && (
+                    <div style={styles.recommendPanel}>
+                        <h3 style={styles.recommendTitle}>
+                            {recommendedDifficulty ? (
+                                <>Recommended {recommendedDifficulty} Courses</>
+                            ) : (
+                                'Recommended Courses'
+                            )}
+                        </h3>
+
+                        {coursesLoading ? (
+                            <p>Loading course recommendations...</p>
+                        ) : coursesError ? (
+                            <p style={{ color: '#dc2626' }}>{coursesError}</p>
+                        ) : (
+                            <div style={styles.recommendGrid}>
+                                {recommendedCourses.map((course) => (
+                                    <div key={course.id} style={styles.recommendCard}>
+                                        <div>
+                                            <div style={styles.courseTitle}>{course.title}</div>
+                                            <div style={styles.courseMeta}>
+                                                {course.duration_minutes ? `${course.duration_minutes} min` : 'Duration TBD'} • {course.category?.name || 'General'}
+                                            </div>
+                                            <p style={{ fontSize: '0.95rem', color: '#374151', margin: 0 }}>
+                                                {course.description?.slice(0, 110) ?? 'High-impact course material.'}
+                                            </p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                recordCourseInteraction(course);
+                                                if (course.content_url) {
+                                                    window.open(course.content_url, '_blank', 'noopener noreferrer');
+                                                } else {
+                                                    navigate(`/courses/${course.id}`);
+                                                }
+                                            }}
+                                            style={{
+                                                ...styles.courseLink,
+                                                background: 'transparent',
+                                                border: 'none',
+                                                padding: 0,
+                                                textAlign: 'left',
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            Explore →
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
 
             </div>
         </div>
